@@ -1,6 +1,5 @@
 {
   "name": "kowts/sisp-cv",
-  "version": "0.1.0",
   "description": "Biblioteca PHP pura para pagamentos SISP/Vinti4 de Cabo Verde.",
   "type": "library",
   "license": "MIT",
