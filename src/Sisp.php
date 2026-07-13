@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Kowts\Sisp;
 
-use Kowts\Sisp\Actions\BuildPaymentRequest;
-use Kowts\Sisp\Http\AutoSubmitForm;
-use Kowts\Sisp\Security\Fingerprint;
-use Kowts\Sisp\ValueObjects\CallbackPayload;
-use Kowts\Sisp\ValueObjects\PaymentRequest;
-use Kowts\Sisp\ValueObjects\SispCredentials;
+use Kowts\Sisp\Application\Action\BuildPaymentRequest;
+use Kowts\Sisp\Application\Builder\PaymentBuilder;
+use Kowts\Sisp\Infrastructure\Http\AutoSubmitForm;
+use Kowts\Sisp\Infrastructure\Security\Fingerprint;
+use Kowts\Sisp\Domain\ValueObject\CallbackPayload;
+use Kowts\Sisp\Domain\ValueObject\PaymentRequest;
+use Kowts\Sisp\Domain\ValueObject\SispCredentials;
 use InvalidArgumentException;
 
 final class Sisp

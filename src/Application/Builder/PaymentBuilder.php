@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Kowts\Sisp;
+namespace Kowts\Sisp\Application\Builder;
 
-use Kowts\Sisp\Actions\BuildPaymentRequest;
-use Kowts\Sisp\Support\SispAmount;
-use Kowts\Sisp\ValueObjects\PaymentRequest;
+use Kowts\Sisp\Application\Action\BuildPaymentRequest;
+use Kowts\Sisp\Domain\Amount\SispAmount;
+use Kowts\Sisp\Domain\ValueObject\PaymentRequest;
 use InvalidArgumentException;
 
 final class PaymentBuilder

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Kowts\Sisp\Actions;
+namespace Kowts\Sisp\Application\Action;
 
 use Kowts\Sisp\Support\CountryCodeMapper;
 use DateTimeImmutable;

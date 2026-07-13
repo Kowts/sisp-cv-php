@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Kowts\Sisp\Security;
+namespace Kowts\Sisp\Infrastructure\Security;
 
-use Kowts\Sisp\Support\SispAmount;
-use Kowts\Sisp\ValueObjects\CallbackPayload;
+use Kowts\Sisp\Domain\Amount\SispAmount;
+use Kowts\Sisp\Domain\ValueObject\CallbackPayload;
 
 final class Fingerprint
 {

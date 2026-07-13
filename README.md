@@ -17,10 +17,10 @@ composer dump-autoload
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Kowts\Sisp\Sisp;
-use Kowts\Sisp\ValueObjects\SispCredentials;
+use Kowts\Sisp\SispFactory;
+use Kowts\Sisp\Config\SispConfig;
 
-$sisp = new Sisp(new SispCredentials([
+$sisp = SispFactory::create(SispConfig::fromArray([
     'posId' => '90051',
     'posAutCode' => 'secret',
     'url' => 'https://pagali.vinti4.cv/Vinti4-Pagamentos/PaymentGateway',

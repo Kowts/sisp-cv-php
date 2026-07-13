@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Kowts\Sisp\Support;
+namespace Kowts\Sisp\Domain\Amount;
 
 use InvalidArgumentException;
 use RangeException;

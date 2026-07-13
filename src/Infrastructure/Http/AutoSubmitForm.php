@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Kowts\Sisp\Http;
+namespace Kowts\Sisp\Infrastructure\Http;
 
 final class AutoSubmitForm
 {

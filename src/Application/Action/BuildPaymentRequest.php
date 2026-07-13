@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Kowts\Sisp\Actions;
+namespace Kowts\Sisp\Application\Action;
 
-use Kowts\Sisp\Security\Fingerprint;
+use Kowts\Sisp\Infrastructure\Security\Fingerprint;
 use Kowts\Sisp\Support\Generators;
-use Kowts\Sisp\ValueObjects\PaymentRequest;
-use Kowts\Sisp\ValueObjects\SispCredentials;
+use Kowts\Sisp\Domain\ValueObject\PaymentRequest;
+use Kowts\Sisp\Domain\ValueObject\SispCredentials;
 use InvalidArgumentException;
 
 final class BuildPaymentRequest

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Kowts\Sisp\ValueObjects;
+namespace Kowts\Sisp\Domain\ValueObject;
 
 final class CallbackPayload
 {
