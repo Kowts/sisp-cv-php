@@ -1,0 +1,75 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Kowts\Sisp\Infrastructure\Persistence\SispSchema;
+
+require __DIR__.'/../vendor/autoload.php';
+
+$command = $argv[1] ?? 'help';
+
+if ($command === 'help' || in_array($command, ['-h', '--help'], true)) {
+    echo "SISP CLI\n";
+    echo "Usage: sisp <command>\n\n";
+    echo "Commands:\n";
+    echo "  doctor      Validate PHP extensions and SISP env vars\n";
+    echo "  migrate     Create/update SISP PDO tables\n";
+    echo "  reconcile   Placeholder for pending transaction reconciliation\n";
+    exit(0);
+}
+
+if ($command === 'doctor') {
+    $errors = [];
+
+    if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+        $errors[] = 'PHP 8.1 or newer is required. Current: '.PHP_VERSION;
+    }
+
+    foreach (['json', 'pdo'] as $extension) {
+        if (! extension_loaded($extension)) {
+            $errors[] = 'Missing PHP extension: '.$extension;
+        }
+    }
+
+    foreach (['SISP_POS_ID', 'SISP_POS_AUT_CODE', 'SISP_URL', 'SISP_CALLBACK_URL'] as $env) {
+        if (trim((string) getenv($env)) === '') {
+            $errors[] = 'Missing environment variable: '.$env;
+        }
+    }
+
+    if ($errors === []) {
+        echo "SISP doctor passed.\n";
+        exit(0);
+    }
+
+    foreach ($errors as $error) {
+        echo "[error] ".$error."\n";
+    }
+
+    exit(1);
+}
+
+if ($command === 'migrate') {
+    $dsn = getenv('SISP_DB_DSN') ?: '';
+    $user = getenv('SISP_DB_USER') ?: null;
+    $password = getenv('SISP_DB_PASSWORD') ?: null;
+
+    if ($dsn === '') {
+        fwrite(STDERR, "SISP_DB_DSN is required for migrate.\n");
+        exit(1);
+    }
+
+    $pdo = new PDO($dsn, $user === false ? null : $user, $password === false ? null : $password);
+    SispSchema::migrate($pdo);
+    echo "SISP tables migrated.\n";
+    exit(0);
+}
+
+if ($command === 'reconcile') {
+    echo "Reconciliation command is available as an operational hook. Configure a transaction-status client before enabling remote reconciliation.\n";
+    exit(0);
+}
+
+fwrite(STDERR, "Unknown command: {$command}\n");
+exit(1);
