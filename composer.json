@@ -1,0 +1,19 @@
+{
+  "name": "akira/sisp-php",
+  "version": "0.1.0",
+  "description": "Core PHP client for SISP/Vinti4 payments inspired by akira-io/laravel-sisp and akira-io/node-sisp.",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=7.4",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Akira\\SispPhp\\": "src/"
+    }
+  },
+  "scripts": {
+    "test": "php tests/GoldenVectorsTest.php"
+  }
+}
