@@ -46,7 +46,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Kowts\\Sisp\\Tests\\": "tests/"
+      "Kowts\\Sisp\\Tests\\": "tests/",
+      "yii\\": "tests/Stubs/Yii2/"
     }
   },
   "bin": [
