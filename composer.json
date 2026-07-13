@@ -1,19 +1,100 @@
 {
-  "name": "akira/sisp-php",
+  "name": "kowts/sisp-cv",
   "version": "0.1.0",
-  "description": "Core PHP client for SISP/Vinti4 payments inspired by akira-io/laravel-sisp and akira-io/node-sisp.",
+  "description": "Biblioteca PHP pura para pagamentos SISP/Vinti4 de Cabo Verde.",
   "type": "library",
   "license": "MIT",
+  "homepage": "https://github.com/Kowts/sisp-cv-php",
+  "keywords": [
+    "cabo-verde",
+    "sisp",
+    "vinti4",
+    "pagamentos",
+    "laravel",
+    "symfony",
+    "yii2"
+  ],
+  "authors": [
+    {
+      "name": "Kowts",
+      "homepage": "https://github.com/Kowts"
+    }
+  ],
   "require": {
-    "php": ">=7.4",
-    "ext-json": "*"
+    "php": "^8.1",
+    "ext-json": "*",
+    "ext-pdo": "*"
+  },
+  "require-dev": {
+    "illuminate/support": "^10.0 || ^11.0 || ^12.0",
+    "phpstan/phpstan": "^1.12 || ^2.0",
+    "phpunit/phpunit": "^10.5 || ^11.0",
+    "squizlabs/php_codesniffer": "^3.10 || ^4.0",
+    "symfony/config": "^6.4 || ^7.0",
+    "symfony/dependency-injection": "^6.4 || ^7.0",
+    "symfony/http-kernel": "^6.4 || ^7.0"
+  },
+  "suggest": {
+    "illuminate/support": "Necessario para usar o Service Provider Laravel.",
+    "symfony/dependency-injection": "Necessario para usar o bundle Symfony.",
+    "yiisoft/yii2": "Necessario para usar o componente Yii2."
   },
   "autoload": {
     "psr-4": {
-      "Akira\\SispPhp\\": "src/"
+      "Kowts\\Sisp\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Kowts\\Sisp\\Tests\\": "tests/"
+    }
+  },
+  "bin": [
+    "bin/sisp"
+  ],
   "scripts": {
-    "test": "php tests/GoldenVectorsTest.php"
-  }
+    "test": "phpunit",
+    "analyse": "phpstan analyse",
+    "cs": "phpcs",
+    "check": [
+      "@cs",
+      "@analyse",
+      "@test"
+    ]
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": false
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Kowts\\Sisp\\Bridge\\Laravel\\SispServiceProvider"
+      ]
+    }
+  },
+  "support": {
+    "issues": "https://github.com/Kowts/sisp-cv-php/issues",
+    "source": "https://github.com/Kowts/sisp-cv-php"
+  },
+  "archive": {
+    "name": "sisp-cv",
+    "exclude": [
+      "/.github",
+      "/.phpunit.cache",
+      "/build",
+      "/dist",
+      "/tests",
+      "/tools",
+      "/vendor",
+      "/.gitattributes",
+      "/.gitignore",
+      "/composer.lock",
+      "/phpcs.xml.dist",
+      "/phpstan.neon.dist",
+      "/phpunit.xml.dist"
+    ]
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
 }

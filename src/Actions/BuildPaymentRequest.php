@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Akira\SispPhp\Actions;
+namespace Kowts\Sisp\Actions;
 
-use Akira\SispPhp\Security\Fingerprint;
-use Akira\SispPhp\Support\Generators;
-use Akira\SispPhp\ValueObjects\PaymentRequest;
-use Akira\SispPhp\ValueObjects\SispCredentials;
+use Kowts\Sisp\Security\Fingerprint;
+use Kowts\Sisp\Support\Generators;
+use Kowts\Sisp\ValueObjects\PaymentRequest;
+use Kowts\Sisp\ValueObjects\SispCredentials;
 use InvalidArgumentException;
 
 final class BuildPaymentRequest

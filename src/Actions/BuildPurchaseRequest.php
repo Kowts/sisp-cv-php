@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Akira\SispPhp\Actions;
+namespace Kowts\Sisp\Actions;
 
-use Akira\SispPhp\Support\CountryCodeMapper;
+use Kowts\Sisp\Support\CountryCodeMapper;
 use DateTimeImmutable;
 use DateTimeInterface;
 

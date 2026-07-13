@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Akira\SispPhp\Security;
+namespace Kowts\Sisp\Security;
 
-use Akira\SispPhp\Support\SispAmount;
-use Akira\SispPhp\ValueObjects\CallbackPayload;
+use Kowts\Sisp\Support\SispAmount;
+use Kowts\Sisp\ValueObjects\CallbackPayload;
 
 final class Fingerprint
 {

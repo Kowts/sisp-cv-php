@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Akira\SispPhp\Support;
+namespace Kowts\Sisp\Support;
 
 use InvalidArgumentException;
 use RangeException;

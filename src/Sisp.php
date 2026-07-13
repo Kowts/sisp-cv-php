@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Akira\SispPhp;
+namespace Kowts\Sisp;
 
-use Akira\SispPhp\Actions\BuildPaymentRequest;
-use Akira\SispPhp\Http\AutoSubmitForm;
-use Akira\SispPhp\Security\Fingerprint;
-use Akira\SispPhp\ValueObjects\CallbackPayload;
-use Akira\SispPhp\ValueObjects\PaymentRequest;
-use Akira\SispPhp\ValueObjects\SispCredentials;
+use Kowts\Sisp\Actions\BuildPaymentRequest;
+use Kowts\Sisp\Http\AutoSubmitForm;
+use Kowts\Sisp\Security\Fingerprint;
+use Kowts\Sisp\ValueObjects\CallbackPayload;
+use Kowts\Sisp\ValueObjects\PaymentRequest;
+use Kowts\Sisp\ValueObjects\SispCredentials;
 use InvalidArgumentException;
 
 final class Sisp

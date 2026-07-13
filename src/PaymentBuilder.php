@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Akira\SispPhp;
+namespace Kowts\Sisp;
 
-use Akira\SispPhp\Actions\BuildPaymentRequest;
-use Akira\SispPhp\Support\SispAmount;
-use Akira\SispPhp\ValueObjects\PaymentRequest;
+use Kowts\Sisp\Actions\BuildPaymentRequest;
+use Kowts\Sisp\Support\SispAmount;
+use Kowts\Sisp\ValueObjects\PaymentRequest;
 use InvalidArgumentException;
 
 final class PaymentBuilder

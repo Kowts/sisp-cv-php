@@ -1,9 +1,6 @@
 # SISP PHP
 
-Cliente PHP core para pagamentos SISP/Vinti4, criado a partir da analise de:
-
-- `akira-io/laravel-sisp`
-- `akira-io/node-sisp`
+Cliente PHP core para pagamentos SISP/Vinti4, criado para funcionar em PHP puro e com bridges opcionais para Laravel, Symfony e Yii2.
 
 Este primeiro corte evita dependencias de framework. Ele cobre o contrato critico do gateway: token, fingerprints, montantes em milesimos, payload 3DS, validacao de callback e formulario auto-submit.
 
@@ -20,8 +17,8 @@ composer dump-autoload
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Akira\SispPhp\Sisp;
-use Akira\SispPhp\ValueObjects\SispCredentials;
+use Kowts\Sisp\Sisp;
+use Kowts\Sisp\ValueObjects\SispCredentials;
 
 $sisp = new Sisp(new SispCredentials([
     'posId' => '90051',
@@ -45,4 +42,4 @@ echo $sisp->renderPaymentForm($request);
 composer test
 ```
 
-Os testes usam vetores de paridade derivados dos repositores analisados para confirmar tokens e fingerprints.
+Os testes usam vetores de paridade para confirmar tokens e fingerprints.

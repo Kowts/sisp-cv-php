@@ -1,4 +1,4 @@
-# Analise dos repositorios akira-io SISP
+# Analise dos repositorios referencia externa SISP
 
 ## O que os dois repositorios tem em comum
 

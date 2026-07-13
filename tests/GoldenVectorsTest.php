@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Akira\SispPhp\Security\Fingerprint;
-use Akira\SispPhp\Support\SispAmount;
-use Akira\SispPhp\ValueObjects\CallbackPayload;
+use Kowts\Sisp\Security\Fingerprint;
+use Kowts\Sisp\Support\SispAmount;
+use Kowts\Sisp\ValueObjects\CallbackPayload;
 
 require __DIR__.'/../vendor/autoload.php';
 

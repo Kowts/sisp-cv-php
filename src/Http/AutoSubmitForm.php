@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Akira\SispPhp\Http;
+namespace Kowts\Sisp\Http;
 
 final class AutoSubmitForm
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Akira\SispPhp\ValueObjects;
+namespace Kowts\Sisp\ValueObjects;
 
 use InvalidArgumentException;
 
