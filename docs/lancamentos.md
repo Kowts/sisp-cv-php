@@ -17,7 +17,7 @@ O workflow de release cria:
 - SBOM CycloneDX;
 - checksums SHA-256;
 - atestações de proveniência;
-- GitHub Release com notas automaticas.
+- GitHub Release com notas automáticas.
 
-Enquanto o pacote estiver abaixo de `1.0.0`, fixe versoes exactas em produção e
-leia o changelog antes de actualizar.
+Enquanto o pacote estiver abaixo de `1.0.0`, fixe versões exatas em produção e
+leia o changelog antes de atualizar.

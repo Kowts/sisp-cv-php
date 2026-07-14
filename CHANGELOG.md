@@ -7,14 +7,16 @@ o projecto adopta [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ## [Não publicado]
 
+## [0.1.0] - 2026-07-14
+
 ### Adicionado
 
-- Nucleo PHP puro para pagamentos SISP/Vinti4.
+- Núcleo PHP puro para pagamentos SISP/Vinti4.
 - Fingerprints de pagamento, callback e refund.
-- Conversão decimal exacta para milésimos.
+- Conversão decimal exata para milésimos.
 - Payload 3DS em Base64.
-- Persistência PDO inicial para transações, tentativas, intents, logs, metadata,
-  blacklist e rate limits.
-- Bridges Laravel, Symfony e Yii2.
+- Persistência PDO inicial para transações, tentativas, intenções, registos,
+  metadados, listas de bloqueio e limites de pedidos.
+- Integrações para Laravel, Symfony e Yii2.
 - CLI `sisp` com `doctor`, `migrate` e `reconcile`.
-- Documentação, exemplos, testes e workflows GitHub.
+- Documentação, exemplos, testes e fluxos de trabalho do GitHub.
