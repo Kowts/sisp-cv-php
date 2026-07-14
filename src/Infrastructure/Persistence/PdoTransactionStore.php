@@ -32,13 +32,18 @@ final class PdoTransactionStore implements TransactionStore
         $this->pdo->beginTransaction();
 
         try {
-            $statement = $this->pdo->prepare(
+            $sql =
                 'INSERT INTO sisp_transactions '
                 . '(merchant_ref, merchant_session, amount, currency, transaction_code, status, payload, '
                 . 'created_at, updated_at) '
                 . 'VALUES (:merchant_ref, :merchant_session, :amount, :currency, :transaction_code, :status, '
-                . ':payload, :created_at, :updated_at)'
-            );
+                . ':payload, :created_at, :updated_at)';
+
+            if ($this->driverName() === 'pgsql') {
+                $sql .= ' RETURNING id';
+            }
+
+            $statement = $this->pdo->prepare($sql);
             $statement->execute([
                 'merchant_ref' => $request->merchantRef,
                 'merchant_session' => $request->merchantSession,
@@ -51,7 +56,7 @@ final class PdoTransactionStore implements TransactionStore
                 'updated_at' => $now,
             ]);
 
-            $id = (int) $this->pdo->lastInsertId();
+            $id = $this->insertedTransactionId($statement);
 
             $attempt = $this->pdo->prepare(
                 'INSERT INTO sisp_transaction_attempts '
@@ -73,7 +78,9 @@ final class PdoTransactionStore implements TransactionStore
 
             return $this->findById($id);
         } catch (\Throwable $exception) {
-            $this->pdo->rollBack();
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
             throw $exception;
         }
     }
@@ -138,7 +145,9 @@ final class PdoTransactionStore implements TransactionStore
 
             return $this->findById($transaction->id);
         } catch (\Throwable $exception) {
-            $this->pdo->rollBack();
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
             throw $exception;
         }
     }
@@ -154,6 +163,26 @@ final class PdoTransactionStore implements TransactionStore
         }
 
         return $this->recordFromRow($row);
+    }
+
+    private function insertedTransactionId(\PDOStatement $statement): int
+    {
+        if ($this->driverName() === 'pgsql') {
+            $id = $statement->fetchColumn();
+
+            if ($id === false) {
+                throw new \RuntimeException('PostgreSQL não devolveu o ID da transação SISP criada.');
+            }
+
+            return (int) $id;
+        }
+
+        return (int) $this->pdo->lastInsertId();
+    }
+
+    private function driverName(): string
+    {
+        return (string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
     }
 
     /**

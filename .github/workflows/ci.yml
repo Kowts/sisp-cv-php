@@ -103,14 +103,42 @@ jobs:
           composer require --dev yiisoft/yii2 --with-all-dependencies --no-interaction --prefer-dist
       - run: php vendor/bin/phpunit tests/Yii2BridgeTest.php
 
-  database-sqlite:
+  database:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_DATABASE: sisp
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --host=127.0.0.1 --password=root"
+          --health-interval=10s --health-timeout=5s --health-retries=10
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: sisp
+          POSTGRES_PASSWORD: root
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready --username=postgres --dbname=sisp"
+          --health-interval=10s --health-timeout=5s --health-retries=10
+    env:
+      SISP_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=3306;dbname=sisp
+      SISP_TEST_MYSQL_USER: root
+      SISP_TEST_MYSQL_PASSWORD: root
+      SISP_TEST_PGSQL_DSN: pgsql:host=127.0.0.1;port=5432;dbname=sisp
+      SISP_TEST_PGSQL_USER: postgres
+      SISP_TEST_PGSQL_PASSWORD: root
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
-          extensions: json, pdo, pdo_sqlite, sqlite3
+          extensions: json, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, sqlite3
           coverage: none
       - run: composer install --no-interaction --prefer-dist
-      - run: php vendor/bin/phpunit tests/PdoStorageTest.php
+      - run: php vendor/bin/phpunit tests/PdoStorageTest.php tests/PdoDriverIntegrationTest.php

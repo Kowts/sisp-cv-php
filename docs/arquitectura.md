@@ -19,7 +19,7 @@ flowchart TD
 
 ## Camadas
 
-- `Domain`: objectos de valor, estados, codigos e montantes.
+- `Domain`: objectos de valor, estados, códigos e montantes.
 - `Contract`: portas para persistência e futuras integrações externas.
 - `Application`: builders e acções de caso de uso.
 - `Infrastructure`: fingerprints, HTML, PDO e suporte operacional.
@@ -28,11 +28,12 @@ flowchart TD
 As bridges não contêm regra de negócio. Elas apenas convertem configuração do
 framework para `SispConfig` e registam `Kowts\Sisp\Sisp` no container.
 
-## Decisoes
+## Decisões
 
 - fingerprints e montantes ficam no core para terem o mesmo comportamento em
   PHP puro e em frameworks;
 - persistência é opcional, mas recomendada em produção;
-- `SispSchema` usa SQL simples e actualmente é validado em SQLite;
-- MySQL/PostgreSQL devem entrar no CI depois da camada de schema ficar
-  completamente portável.
+- `SispSchema` escolhe SQL para SQLite, MySQL/MariaDB e PostgreSQL a partir do
+  driver PDO;
+- os três motores são validados no CI: SQLite em memória, MySQL e PostgreSQL
+  em serviços efémeros.

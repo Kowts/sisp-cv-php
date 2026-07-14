@@ -622,7 +622,7 @@ public static function migrate(PDO $pdo): void
 #### `statements()`
 
 ```php
-public static function statements(): array
+public static function statements(string $driver = 'sqlite'): array
 ```
 
 

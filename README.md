@@ -24,7 +24,7 @@ integrar aplicações PHP puras, Laravel, Symfony e Yii2.
 - builder fluente de pagamento e formulário HTML auto-submit;
 - validação de callback em tempo constante;
 - payload 3DS com dados de cliente;
-- persistência PDO inicial para transações, tentativas e intents;
+- persistência PDO para SQLite, MySQL/MariaDB e PostgreSQL;
 - CLI para diagnóstico, migrations e gancho de reconciliação;
 - bridges opcionais Laravel, Symfony e Yii2;
 - testes de paridade para fingerprints e montantes.
@@ -33,7 +33,7 @@ integrar aplicações PHP puras, Laravel, Symfony e Yii2.
 
 - PHP 8.1 ou superior;
 - extensões `json` e `pdo`;
-- `pdo_sqlite` para testes locais SQLite;
+- o driver PDO do motor escolhido: `pdo_sqlite`, `pdo_mysql` ou `pdo_pgsql`;
 - credenciais SISP/Vinti4 fornecidas pela entidade adquirente.
 
 ## Instalação
@@ -82,6 +82,9 @@ echo $sisp->renderPaymentForm($request);
 ```
 
 ## Persistência PDO
+
+`SispSchema` cria automaticamente o esquema em SQLite, MySQL/MariaDB e
+PostgreSQL. Em produção, use a extensão PDO correspondente ao motor escolhido.
 
 ```php
 $pdo = new PDO('sqlite:/var/app/sisp.sqlite');
