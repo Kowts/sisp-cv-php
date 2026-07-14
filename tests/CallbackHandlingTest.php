@@ -21,7 +21,7 @@ final class CallbackHandlingTest extends TestCase
         $sisp = $this->sisp($store);
         $sisp->createPayment($this->paymentData());
 
-        $callback = $this->callback([
+        $callback = $this->signedCallback([
             'merchantRef' => 'R1',
             'merchantSession' => 'S1',
             'amount' => '1501',
@@ -40,7 +40,7 @@ final class CallbackHandlingTest extends TestCase
         $sisp = $this->sisp($store);
         $sisp->createPayment($this->paymentData());
 
-        $completed = $sisp->handleCallback($this->callback([
+        $completed = $sisp->handleCallback($this->signedCallback([
             'merchantRef' => 'R1',
             'merchantSession' => 'S1',
             'amount' => '1500',
@@ -49,7 +49,7 @@ final class CallbackHandlingTest extends TestCase
         self::assertNotNull($completed);
         self::assertSame(TransactionStatus::COMPLETED, $completed->status);
 
-        $failedRetry = $sisp->handleCallback($this->callback([
+        $failedRetry = $sisp->handleCallback($this->signedCallback([
             'merchantRef' => 'R1',
             'merchantSession' => 'S1',
             'amount' => '1500',
@@ -88,7 +88,7 @@ final class CallbackHandlingTest extends TestCase
     /**
      * @param array<string,string> $overrides
      */
-    private function callback(array $overrides): CallbackPayload
+    private function signedCallback(array $overrides): CallbackPayload
     {
         $payload = new CallbackPayload(array_merge([
             'merchantRef' => '',
