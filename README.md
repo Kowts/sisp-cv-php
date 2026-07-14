@@ -1,9 +1,13 @@
 # SISP CV para PHP
 
 [![Testes](https://github.com/Kowts/sisp-cv-php/actions/workflows/ci.yml/badge.svg)](https://github.com/Kowts/sisp-cv-php/actions/workflows/ci.yml)
+[![Cobertura](https://img.shields.io/badge/cobertura-%E2%89%A550%25-brightgreen.svg)](https://github.com/Kowts/sisp-cv-php/actions/workflows/ci.yml)
+[![PHPStan](https://img.shields.io/badge/PHPStan-level%208-4e9a06.svg)](phpstan.neon.dist)
 [![Packagist](https://img.shields.io/packagist/v/kowts/sisp-cv.svg)](https://packagist.org/packages/kowts/sisp-cv)
 [![PHP](https://img.shields.io/badge/PHP-%5E8.1-777BB4.svg)](https://www.php.net/)
 [![Licença](https://img.shields.io/badge/licença-MIT-blue.svg)](LICENSE)
+[![Aikido package health](https://img.shields.io/badge/Aikido-package%20health-6f5bf4.svg)](https://intel.aikido.dev/packages/packagist/kowts/sisp-cv)
+![Estado](https://img.shields.io/badge/estado-beta-orange.svg)
 
 Biblioteca PHP independente de frameworks para criar pedidos de pagamento
 SISP/Vinti4, gerar fingerprints, validar callbacks e manter o ciclo de vida
