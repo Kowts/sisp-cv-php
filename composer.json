@@ -56,9 +56,16 @@
     "test": "phpunit",
     "analyse": "phpstan analyse",
     "cs": "phpcs",
+    "coverage": "phpunit --coverage-clover build/coverage.xml",
+    "docs:api": "@php tools/generate-api-docs.php",
+    "docs:api:check": [
+      "@docs:api",
+      "git diff --exit-code docs/api-reference.md"
+    ],
     "check": [
       "@cs",
       "@analyse",
+      "@docs:api:check",
       "@test"
     ]
   },
@@ -81,12 +88,19 @@
     "name": "sisp-cv",
     "exclude": [
       "/.github",
+      "/.agents",
+      "/.codex",
       "/.phpunit.cache",
       "/build",
       "/dist",
+      "/dist*",
       "/tests",
       "/tools",
       "/vendor",
+      "/src/Actions",
+      "/src/Http",
+      "/src/Security",
+      "/src/ValueObjects",
       "/.gitattributes",
       "/.gitignore",
       "/composer.lock",

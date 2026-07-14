@@ -1,11 +1,30 @@
 # Pagamentos
 
-O pedido de pagamento gera:
+O pedido de pagamento gera os campos esperados pelo gateway:
 
-- `merchantRef`
-- `merchantSession`
-- `timeStamp`
-- fingerprint SHA-512 em Base64
-- campos HTML para submissao ao gateway
+- `posID`;
+- `merchantRef`;
+- `merchantSession`;
+- `amount`;
+- `currency`;
+- `timeStamp`;
+- `transactionCode`;
+- `fingerprint`;
+- campos opcionais de 3DS.
 
-Para ambientes web tradicionais, envie `renderPaymentForm($request)` como resposta HTTP. Para SPA, use `$request->toFormFields()` e submeta um formulario full-page no browser.
+## Formulario auto-submit
+
+`renderPaymentForm($request)` devolve HTML que submete automaticamente para o
+endpoint configurado em `url`. O URL de destino inclui `FingerPrint`,
+`TimeStamp` e `FingerPrintVersion` na query string.
+
+## SPA / frontend separado
+
+Para SPAs, o backend deve devolver os campos de `$request->toFormFields()` e o
+frontend deve construir um formulario full-page. Nao envie `posAutCode` nem
+qualquer segredo para o browser.
+
+## 3DS
+
+Quando `is3DSec` e `1`, informe dados de cliente suficientes para o payload
+3DS: email, pais, cidade, endereco, codigo postal e telefone opcional.

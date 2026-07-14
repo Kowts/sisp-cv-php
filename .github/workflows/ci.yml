@@ -1,0 +1,116 @@
+name: Testes
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        php: ['8.1', '8.2', '8.3', '8.4']
+
+    steps:
+      - name: Obter codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: json, pdo, pdo_sqlite, sqlite3
+          coverage: none
+
+      - name: Instalar dependencias
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Validar pacote Composer
+        run: composer validate --strict
+
+      - name: Testes
+        run: composer test
+
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: json, pdo, pdo_sqlite, sqlite3
+          coverage: xdebug
+      - run: composer install --no-interaction --prefer-dist
+      - run: composer cs
+      - run: composer analyse
+      - name: Verificar referencia automatica da API
+        run: composer docs:api:check
+      - name: Cobertura minima
+        run: |
+          composer coverage
+          php tools/check-coverage.php build/coverage.xml 50
+      - name: Auditoria de dependencias
+        run: composer audit
+
+  dependency-range:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: '8.1'
+            composer_update_flags: '--prefer-lowest --prefer-stable'
+            label: dependencias minimas
+          - php: '8.4'
+            composer_update_flags: ''
+            label: dependencias recentes
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: json, pdo, pdo_sqlite, sqlite3
+          coverage: none
+      - name: Resolver ${{ matrix.label }}
+        run: composer update ${{ matrix.composer_update_flags }} --no-interaction --prefer-dist
+      - run: composer validate --strict
+      - run: composer check
+
+  yii2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: json, pdo
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - name: Instalar Yii2 apenas para teste de compatibilidade
+        run: |
+          composer config repositories.asset-packagist composer https://asset-packagist.org
+          composer require --dev yiisoft/yii2 --with-all-dependencies --no-interaction --prefer-dist
+      - run: php vendor/bin/phpunit tests/Yii2BridgeTest.php
+
+  database-sqlite:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: json, pdo, pdo_sqlite, sqlite3
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - run: php vendor/bin/phpunit tests/PdoStorageTest.php

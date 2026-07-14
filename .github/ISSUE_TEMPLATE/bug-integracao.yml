@@ -1,0 +1,84 @@
+name: Bug de integracao
+description: Reportar falhas ao integrar a biblioteca com frameworks, PDO, CLI ou ambiente PHP.
+title: "[Integracao]: "
+labels:
+  - bug
+  - integracao
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use este formulario para problemas tecnicos. Nao inclua posAutCode, tokens, PAN completo, CVV, recibos reais, credenciais ou dados pessoais.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area afectada
+      options:
+        - PHP puro
+        - Laravel
+        - Symfony
+        - Yii2
+        - PDO / persistencia
+        - CLI
+        - Composer / instalacao
+        - Outro
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versao do pacote
+      placeholder: v0.1.0, dev-main ou hash do commit
+    validations:
+      required: true
+  - type: input
+    id: php
+    attributes:
+      label: Versao do PHP
+      placeholder: "8.3.6"
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Ambiente tecnico
+      description: Sistema operativo, framework, versao do framework, driver PDO e extensoes relevantes.
+      placeholder: |
+        SO:
+        Framework:
+        Driver PDO:
+        Extensoes PHP:
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passos para reproduzir
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamento esperado
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Comportamento observado
+      description: Inclua mensagens de erro e stack trace, removendo dados sensiveis.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Confirmacoes
+      options:
+        - label: Removi tokens, posAutCode, dados de cartao, credenciais e dados pessoais.
+          required: true
+        - label: Verifiquei se o problema ocorre na versao mais recente disponivel.
+          required: false

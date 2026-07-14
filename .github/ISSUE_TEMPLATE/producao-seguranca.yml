@@ -1,0 +1,52 @@
+name: Producao / seguranca
+description: Pedir ajuda sobre hardening, operacao, release, reconciliacao ou reporte de risco nao sensivel.
+title: "[Producao]: "
+labels:
+  - producao
+  - seguranca
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Vulnerabilidades devem ser reportadas pelo separador Security, nao por issue publica.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Configuracao de producao
+        - Logs / auditoria
+        - Reconciliacao
+        - Persistencia
+        - CI / release
+        - Seguranca nao sensivel
+        - Outro
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Questao
+      description: Descreva a duvida sem credenciais nem dados pessoais.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Contexto tecnico
+      placeholder: |
+        Ambiente:
+        Framework:
+        Driver PDO:
+        Modo de deploy:
+    validations:
+      required: false
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmacoes
+      options:
+        - label: Nao inclui segredos, dados de cartao, recibos reais ou dados pessoais.
+          required: true
+        - label: Entendo que este projecto nao e oficial da SISP/Vinti4.
+          required: true

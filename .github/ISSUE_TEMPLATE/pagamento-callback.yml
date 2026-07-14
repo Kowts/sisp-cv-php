@@ -1,0 +1,55 @@
+name: Pagamento ou callback
+description: Reportar divergencias de fingerprint, redireccionamento, callback ou estado de transacao.
+title: "[Pagamento]: "
+labels:
+  - pagamento
+  - callback
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use apenas dados ficticios. Nao inclua posAutCode, token real, PAN completo, CVV, recibos reais ou dados pessoais.
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Tema
+      options:
+        - Fingerprint de pagamento
+        - Formulario / redireccionamento
+        - Callback
+        - Estado da transacao
+        - Idempotencia
+        - 3DS
+        - Refund
+        - Outro
+    validations:
+      required: true
+  - type: textarea
+    id: sample
+    attributes:
+      label: Payload reduzido e anonimizado
+      description: Use valores ficticios. Troque credenciais por placeholders.
+      render: php
+    validations:
+      required: false
+  - type: textarea
+    id: expected
+    attributes:
+      label: Resultado esperado
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Resultado observado
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmacoes
+      options:
+        - label: Usei apenas dados ficticios ou anonimizados.
+          required: true
+        - label: Nao inclui dados reais de cartao, CVV, token, posAutCode ou recibos reais.
+          required: true

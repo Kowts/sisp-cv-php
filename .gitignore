@@ -2,6 +2,7 @@
 /composer.lock
 
 /.codex/analysis/
+/.agents/
 /.phpunit.cache/
 /.phpunit.result.cache
 /.phpcs-cache

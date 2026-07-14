@@ -1,7 +1,9 @@
 parameters:
-    level: 6
+    level: 8
     paths:
         - src
-        - tests
+    scanFiles:
+        - tests/Stubs/Yii2/base/Component.php
+        - tests/Stubs/Yii2/base/BootstrapInterface.php
     tmpDir: build/phpstan
-    checkMissingIterableValueType: false
+    treatPhpDocTypesAsCertain: false
