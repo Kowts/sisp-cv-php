@@ -1,25 +1,42 @@
 # Callbacks
 
-O callback confirma a resposta do gateway e deve ser tratado antes de mostrar
-qualquer resultado definitivo ao cliente.
+O callback confirma a resposta do gateway. Deve ser um endpoint HTTPS público,
+sem autenticação de sessão do cliente e capaz de receber repetições da mesma
+notificação.
 
 ## Fluxo recomendado
 
-1. Receber `POST` no URL configurado em `urlMerchantResponse`.
-2. Criar `CallbackPayload::fromPost($_POST)`.
-3. Validar fingerprint com `validateCallback`.
-4. Encontrar a transação por `merchantRef` e `merchantSession`.
-5. Actualizar estado local apenas se a assinatura for válida.
-6. Redireccionar para uma página de resultado da aplicação.
+1. Receba o `POST` no URL definido em `urlMerchantResponse`.
+2. Construa `CallbackPayload::fromPost($_POST)`.
+3. Valide o fingerprint com `validateCallback()`.
+4. Encontre a transação por `merchantRef` e `merchantSession`.
+5. Registe a notificação e aplique a transição de estado numa transação local.
+6. Responda rapidamente com um código HTTP de sucesso para callbacks válidos.
+7. Faça o redireccionamento ou a consulta de estado do cliente separadamente.
 
-## Estados
+## Estados locais
 
-O core mapeia mensagens conhecidas de sucesso para `completed`, erros para
-`failed` e respostas ainda inconclusivas para `pending`.
+O core mapeia mensagens de sucesso conhecidas para `completed`, falhas para
+`failed` e respostas inconclusivas para `pending`. A aplicação deve tratar o
+estado local como parte do seu próprio fluxo de encomenda: só entregue produto,
+active serviço ou emita documento quando a regra de negócio permitir.
 
-## Regras de segurança
+## Repetições e ordem
 
-- rejeite callbacks com fingerprint inválido;
-- não confie apenas em parâmetros visíveis no browser;
-- guarde o payload redigido para auditoria;
-- não grave PAN completo, CVV ou dados sensíveis.
+O gateway pode repetir callbacks ou o browser pode regressar antes deles. Um
+callback repetido deve ser seguro: conserve o mesmo estado final, actualize a
+auditoria e não duplique encomendas, recibos ou movimentos de stock. Não assuma
+que as notificações chegam por ordem cronológica.
+
+## Registo seguro
+
+Guarde identificadores, estado, código de resposta e horário. Redija ou omita
+PAN, recibos, erros detalhados, e qualquer dado pessoal que não seja necessário
+para operar a transação. O payload completo não deve ser exposto em logs de
+aplicação, ferramentas de erro ou issues.
+
+## Falhas de validação
+
+Para fingerprints inválidos, responda com `400`, não altere a encomenda e registe
+um evento técnico sem segredos. Investigue referências desconhecidas e callbacks
+atrasados através da rotina de reconciliação, nunca marcando sucesso por omissão.

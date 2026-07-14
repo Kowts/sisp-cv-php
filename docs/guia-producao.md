@@ -1,19 +1,26 @@
-# Guia de Produção
+# Guia de produção
 
-Checklist mínima antes de activar pagamentos reais:
+## Antes do lançamento
 
-- confirmar contrato e credenciais com a entidade adquirente;
-- definir `SISP_POS_ID`, `SISP_POS_AUT_CODE`, `SISP_URL` e `SISP_CALLBACK_URL`;
-- usar HTTPS público no callback;
-- configurar persistência PDO;
-- executar `sisp migrate` ou migrações equivalentes da aplicação;
-- validar o fluxo em ambiente de testes;
-- registar callbacks, tentativas e estados finais sem dados sensíveis;
-- ter rotina para reconciliar transações pendentes.
+- confirme contrato, POS ID, credenciais, moedas e URLs com o adquirente;
+- configure `SISP_POS_ID`, `SISP_POS_AUT_CODE`, `SISP_URL` e
+  `SISP_CALLBACK_URL` no ambiente seguro;
+- instale o driver PDO correcto e execute as migrações no motor de produção;
+- use HTTPS público no callback e teste DNS, firewall, TLS e redireccionamentos;
+- valide criação, redireccionamento, callback válido, callback repetido, falha
+  de pagamento e transação pendente no ambiente de testes do fornecedor;
+- documente responsáveis, contactos de escalamento e rotina de reconciliação.
 
-## Operação
+## Durante a operação
 
-Execute periodicamente um processo de reconciliação quando a aplicação tiver
-cliente de transaction-status configurado. Até lá, use relatórios internos para
-identificar transações `pending` antigas e confirmar manualmente no portal do
-adquirente.
+Monitorize taxa de callbacks inválidos, transações pendentes, falhas de PDO e
+diferenças entre encomendas e transações. Registe referências e estados, não
+dados de cartão. Trate indisponibilidade do gateway como `pending` até existir
+confirmação oficial.
+
+## Recuperação
+
+Quando faltar um callback, procure primeiro a transação por referência e sessão,
+consulte o canal oficial disponível para o comerciante e registe quem reconciliou
+o caso. Não altere estados em massa sem correspondência verificável entre a
+encomenda local e o identificador do gateway.

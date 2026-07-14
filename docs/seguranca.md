@@ -1,26 +1,37 @@
 # Segurança
 
-## Fingerprints
+O pacote trata assinaturas e persistência local; a aplicação continua
+responsável por segredos, acesso à base de dados, HTTPS, autorização e operação
+do checkout.
 
-O token e `base64(sha512(posAutCode))`. O pedido de pagamento concatena token,
-timestamp, amount em milésimos, merchant reference, merchant session, POS ID,
-currency e transaction code.
+## Credenciais e fingerprints
 
-Callbacks usam uma ordem fixa de campos e devem ser comparados em tempo
-constante. O pacote usa digest HMAC antes de `hash_equals` para normalizar
-tamanhos.
+`posAutCode` é usado para derivar o token do fingerprint. Guarde-o num gestor
+de segredos ou na configuração protegida do ambiente. Não o exponha em HTML,
+JavaScript, respostas JSON, exceções, capturas de ecrã, commits ou issues.
 
-## Dados sensíveis
+O fingerprint do pedido depende de uma ordem fixa de campos. O callback é
+comparado em tempo constante. Uma validação bem-sucedida prova a integridade dos
+campos assinados, não prova por si só que a encomenda deve ser entregue: aplique
+as regras de estado e de negócio da aplicação.
 
-Nunca exponha:
+## Dados proibidos em documentação e logs
 
-- `posAutCode`;
-- tokens ou secrets;
-- PAN completo, CVV, PIN ou dados reais de cartão;
-- recibos reais sem anonimizar;
-- dados pessoais em issues ou logs.
+Nunca registe ou publique PAN completo, CVV, PIN, credenciais, tokens, recibos
+reais ou dados pessoais desnecessários. Use referências fictícias, e-mails de
+teste e valores anonimizados em exemplos, testes e tickets.
 
-## Produção
+## Superfície HTTP
 
-Use HTTPS, armazene credenciais fora do repositório, fixe versoes do pacote e
-monitorize callbacks inválidos, transações pendentes e tentativas duplicadas.
+- use HTTPS no gateway, callback e páginas de resultado;
+- aceite apenas o método esperado no callback;
+- limite tamanho de pedido e aplique rate limiting no perímetro da aplicação;
+- responda depressa ao callback e trate chamadas repetidas como normais;
+- separe páginas autenticadas do endpoint de notificação do gateway.
+
+## Operação
+
+Restrinja o utilizador PDO aos privilégios necessários, rode credenciais quando
+houver suspeita de exposição e acompanhe fingerprints inválidos, callbacks
+desconhecidos, transações pendentes e picos de repetição. Consulte também
+[SECURITY.md](../SECURITY.md) para reportar uma vulnerabilidade.

@@ -1,146 +1,141 @@
 # SISP CV para PHP
 
 [![Testes](https://github.com/Kowts/sisp-cv-php/actions/workflows/ci.yml/badge.svg)](https://github.com/Kowts/sisp-cv-php/actions/workflows/ci.yml)
-[![Cobertura](https://img.shields.io/badge/cobertura-%E2%89%A550%25-brightgreen.svg)](https://github.com/Kowts/sisp-cv-php/actions/workflows/ci.yml)
-[![PHPStan](https://img.shields.io/badge/PHPStan-level%208-4e9a06.svg)](phpstan.neon.dist)
-[![PHP](https://img.shields.io/badge/PHP-%5E8.1-777BB4.svg)](https://www.php.net/)
-[![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-blue.svg)](LICENSE)
 [![Packagist](https://img.shields.io/packagist/v/kowts/sisp-cv.svg)](https://packagist.org/packages/kowts/sisp-cv)
-![Status](https://img.shields.io/badge/status-beta-orange.svg)
+[![PHP](https://img.shields.io/badge/PHP-%5E8.1-777BB4.svg)](https://www.php.net/)
+[![Licença](https://img.shields.io/badge/licença-MIT-blue.svg)](LICENSE)
 
 Biblioteca PHP independente de frameworks para criar pedidos de pagamento
-SISP/Vinti4, assinar fingerprints, validar callbacks, persistir transações e
-integrar aplicações PHP puras, Laravel, Symfony e Yii2.
+SISP/Vinti4, gerar fingerprints, validar callbacks e manter o ciclo de vida
+local da transação em SQLite, MySQL/MariaDB ou PostgreSQL.
 
 > [!IMPORTANT]
-> Este projecto não é oficial da SISP/Vinti4. A utilização em produção exige
-> credenciais válidas, contrato com a entidade adquirente, endpoints oficiais e
-> testes no ambiente indicado pelo fornecedor de pagamentos.
+> Este projecto não é oficial da SISP, da Vinti4, de bancos adquirentes nem de
+> entidades reguladoras. A produção exige contrato, credenciais e endpoints
+> oficiais fornecidos pela entidade adquirente, bem como testes no ambiente por
+> ela indicado.
 
-## Funcionalidades
+## O que resolve
 
-- token `base64(sha512(posAutCode))` e fingerprints SHA-512;
-- montantes convertidos para milésimos sem multiplicação float insegura;
-- builder fluente de pagamento e formulário HTML auto-submit;
-- validação de callback em tempo constante;
-- payload 3DS com dados de cliente;
-- persistência PDO para SQLite, MySQL/MariaDB e PostgreSQL;
-- CLI para diagnóstico, migrations e gancho de reconciliação;
-- bridges opcionais Laravel, Symfony e Yii2;
-- testes de paridade para fingerprints e montantes.
+- cria pedidos de pagamento com montantes convertidos para milésimos;
+- gera o formulário HTML de redireccionamento ou expõe os campos para uma SPA;
+- valida callbacks em tempo constante e actualiza o estado local;
+- guarda transações, tentativas e intenções de pagamento através de PDO;
+- funciona em PHP puro e disponibiliza bridges finas para Laravel, Symfony e
+  Yii2;
+- inclui CLI, documentação operacional, testes e releases com SBOM e checksums.
+
+O pacote não recolhe dados de cartão, não substitui o contrato com o adquirente
+e não consulta remotamente o estado de uma transação sem um cliente oficial
+configurado pela aplicação.
 
 ## Requisitos
 
 - PHP 8.1 ou superior;
 - extensões `json` e `pdo`;
-- o driver PDO do motor escolhido: `pdo_sqlite`, `pdo_mysql` ou `pdo_pgsql`;
-- credenciais SISP/Vinti4 fornecidas pela entidade adquirente.
+- um driver PDO quando existir persistência: `pdo_sqlite`, `pdo_mysql` ou
+  `pdo_pgsql`;
+- credenciais SISP/Vinti4 válidas, fora do código e do repositório.
 
 ## Instalação
 
 ```bash
-composer require kowts/sisp-cv
+composer require kowts/sisp-cv:^0.2
 ```
 
-Para usar o ramo de desenvolvimento:
-
-```json
-{
-  "repositories": [
-    {"type": "vcs", "url": "https://github.com/Kowts/sisp-cv-php"}
-  ],
-  "require": {
-    "kowts/sisp-cv": "dev-main"
-  }
-}
-```
-
-## Utilização rápida
+## Primeiro pagamento
 
 ```php
 <?php
 
-require __DIR__.'/vendor/autoload.php';
-
 use Kowts\Sisp\Config\SispConfig;
 use Kowts\Sisp\SispFactory;
 
+require __DIR__ . '/vendor/autoload.php';
+
 $sisp = SispFactory::create(SispConfig::fromArray([
-    'posId' => '90051',
+    'posId' => getenv('SISP_POS_ID'),
     'posAutCode' => getenv('SISP_POS_AUT_CODE'),
     'url' => getenv('SISP_URL'),
-    'urlMerchantResponse' => 'https://example.com/sisp/callback',
+    'urlMerchantResponse' => getenv('SISP_CALLBACK_URL'),
 ]));
 
 $request = $sisp->payment()
-    ->amount('1500')
-    ->merchantRef('R'.date('YmdHis'))
-    ->merchantSession('S'.date('YmdHis'))
+    ->amount('1500.00')
+    ->merchantRef('ORDER-20260714-001')
+    ->merchantSession('CHECKOUT-20260714-001')
     ->build();
 
 echo $sisp->renderPaymentForm($request);
 ```
 
+`amount` aceita uma string decimal com ponto. A biblioteca converte o valor para
+milésimos antes de calcular o fingerprint; não formate o montante de forma
+manual nem use vírgulas como separador decimal.
+
+## Fluxo de integração
+
+1. A aplicação cria referências únicas de encomenda e de sessão.
+2. O backend constrói e, em produção, persiste o pedido antes do redireccionamento.
+3. O cliente é enviado para o gateway SISP/Vinti4.
+4. O endpoint de callback valida o fingerprint e actualiza a transação local.
+5. A aplicação mostra o resultado apenas depois de confirmar o estado local.
+6. Transações `pending` são acompanhadas por uma rotina de reconciliação.
+
+Consulte [Pagamentos](docs/pagamentos.md), [Callbacks](docs/callbacks.md) e
+[Reconciliação](docs/reconciliacao.md) antes de ligar o pacote ao checkout.
+
 ## Persistência PDO
 
-`SispSchema` cria automaticamente o esquema em SQLite, MySQL/MariaDB e
-PostgreSQL. Em produção, use a extensão PDO correspondente ao motor escolhido.
+Passe uma ligação PDO para ativar a persistência automática. O esquema suporta
+SQLite, MySQL/MariaDB e PostgreSQL.
 
 ```php
-$pdo = new PDO('sqlite:/var/app/sisp.sqlite');
+$pdo = new PDO(
+    'mysql:host=127.0.0.1;dbname=sisp;charset=utf8mb4',
+    getenv('SISP_DB_USER'),
+    getenv('SISP_DB_PASSWORD'),
+    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+);
 
 $sisp = SispFactory::create(SispConfig::fromArray([
-    'posId' => '90051',
+    'posId' => getenv('SISP_POS_ID'),
     'posAutCode' => getenv('SISP_POS_AUT_CODE'),
     'url' => getenv('SISP_URL'),
-    'urlMerchantResponse' => 'https://example.com/sisp/callback',
+    'urlMerchantResponse' => getenv('SISP_CALLBACK_URL'),
     'pdo' => $pdo,
 ]));
-
-$request = $sisp->createPayment([
-    'amount' => '1500',
-    'merchantRef' => 'R'.date('YmdHis'),
-    'merchantSession' => 'S'.date('YmdHis'),
-]);
 ```
 
-## Frameworks
+O guia de [Persistência PDO](docs/persistencia-pdo.md) descreve o esquema,
+migrações controladas pela aplicação e as diferenças entre motores.
 
-- Laravel resolve `Kowts\Sisp\Sisp` no container e publica `config/sisp.php`.
-- Symfony regista o serviço `kowts_sisp.client`.
-- Yii2 expõe `SispComponent` para `Yii::$app->sisp`.
+## Frameworks e CLI
 
-Consulte [Laravel, Symfony e Yii2](docs/frameworks.md).
+- [Laravel](docs/laravel.md): `Kowts\Sisp\Sisp` resolvido pelo contentor.
+- [Symfony](docs/symfony.md): serviço `kowts_sisp.client`.
+- [Yii2](docs/yii2.md): componente `Yii::$app->sisp`.
+- `bin/sisp doctor`: valida a versão de PHP, extensões e variáveis SISP.
+- `bin/sisp migrate`: cria o esquema no DSN indicado por `SISP_DB_DSN`.
 
 ## Segurança
 
-- nunca envie `posAutCode`, tokens, CVV, PAN completo ou credenciais para o browser;
-- não guarde segredos no repositório;
-- use HTTPS no callback e no gateway;
-- grave logs sem dados de cartão ou dados pessoais;
-- valide callbacks antes de actualizar transações locais.
+Nunca envie `posAutCode`, tokens, PAN completo, CVV, PIN, recibos reais ou
+dados pessoais para o browser, repositório, issues ou logs. Use HTTPS no
+gateway e callback, mantenha segredos no gestor de configuração da aplicação e
+trate callbacks inválidos como tentativas não confiáveis.
 
-Consulte [Segurança](SECURITY.md) e [docs/seguranca.md](docs/seguranca.md).
+Leia [Segurança](docs/seguranca.md), [Guia de produção](docs/guia-producao.md)
+e a política em [SECURITY.md](SECURITY.md).
 
 ## Documentação
 
-- [Arquitectura](docs/arquitectura.md)
-- [API](docs/api.md)
-- [Referência automática da API](docs/api-reference.md)
-- [Pagamentos](docs/pagamentos.md)
-- [Callbacks](docs/callbacks.md)
-- [Idempotência](docs/idempotencia.md)
-- [Persistência PDO](docs/persistencia-pdo.md)
-- [Troubleshooting](docs/troubleshooting.md)
-- [Segurança](docs/seguranca.md)
-- [Guia de produção](docs/guia-producao.md)
-- [Frameworks](docs/frameworks.md)
-- [Laravel](docs/laravel.md)
-- [Symfony](docs/symfony.md)
-- [Yii2](docs/yii2.md)
-- [Lançamentos](docs/lancamentos.md)
-- [Exemplos](examples/README.md)
-- [Contribuir](CONTRIBUTING.md)
+O [índice da documentação](docs/indice.md) organiza os guias por fase de
+integração. Inclui a [API prática](docs/api.md), a
+[referência automática](docs/api-reference.md),
+[exemplos executáveis](examples/README.md),
+[arquitetura](docs/arquitectura.md) e instruções de
+[contribuição](CONTRIBUTING.md).
 
 ## Desenvolvimento
 
@@ -149,9 +144,9 @@ composer install
 composer check
 ```
 
-O pacote exige PHP 8.1+. Em ambientes locais com PHP 7.4, use o CI ou uma
-instalação PHP 8.1+ para correr PHPUnit, PHPStan e PHPCS.
+O CI valida PHP 8.1 a 8.4, Windows e Linux, dependências mínimas e recentes,
+Yii2 e persistência SQLite, MySQL e PostgreSQL.
 
 ## Licença
 
-[MIT](LICENSE) © 2026 Kowts.
+[MIT](LICENSE) © 2026 Kowts. Consulte também [NOTICE](NOTICE).

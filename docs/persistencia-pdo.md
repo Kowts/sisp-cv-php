@@ -1,59 +1,52 @@
 # Persistência PDO
 
-`PdoTransactionStore` cria tabelas automaticamente quando `autoMigrate` está
-ativo em `SispConfig`.
+Ao receber `pdo` em `SispConfig`, `SispFactory` cria um `PdoTransactionStore`.
+Por predefinição, o esquema é criado automaticamente. Em produção, prefira um
+processo de migração controlado e desative `autoMigrate` depois da instalação.
 
-O esquema é suportado em SQLite, MySQL/MariaDB e PostgreSQL. A biblioteca usa o
-driver de `PDO::ATTR_DRIVER_NAME` para escolher a definição da chave primária e
-o PostgreSQL recebe o identificador criado por `RETURNING id`.
+## Motores suportados
 
-Tabelas criadas:
+| Motor | DSN de exemplo | Extensão PHP |
+| --- | --- | --- |
+| SQLite | `sqlite:/var/app/sisp.sqlite` | `pdo_sqlite` |
+| MySQL/MariaDB | `mysql:host=127.0.0.1;dbname=sisp;charset=utf8mb4` | `pdo_mysql` |
+| PostgreSQL | `pgsql:host=127.0.0.1;port=5432;dbname=sisp` | `pdo_pgsql` |
 
-- `sisp_transactions`;
-- `sisp_transaction_attempts`;
-- `sisp_payment_intents`;
-- `sisp_transaction_logs`;
-- `sisp_request_metadata`;
-- `sisp_blacklist`;
-- `sisp_rate_limits`.
+O esquema escolhe a coluna de chave primária de acordo com o driver. No
+PostgreSQL, a criação de transação usa `RETURNING id`; em SQLite e MySQL/MariaDB
+usa o identificador devolvido pelo PDO.
 
-## Ligações
+## Tabelas
 
-```php
-// SQLite
-$pdo = new PDO('sqlite:/var/app/sisp.sqlite');
+- `sisp_transactions`: pedido, estado e identificadores do gateway;
+- `sisp_transaction_attempts`: registo da tentativa e actualização do callback;
+- `sisp_payment_intents`: reserva de idempotência;
+- `sisp_transaction_logs`, `sisp_request_metadata`, `sisp_blacklist` e
+  `sisp_rate_limits`: tabelas operacionais reservadas ao controlo da aplicação.
 
-// MySQL ou MariaDB
-$pdo = new PDO('mysql:host=127.0.0.1;dbname=sisp;charset=utf8mb4', $user, $password);
+As tabelas não substituem as tabelas de encomenda, cliente, contabilidade ou
+auditoria da aplicação. Não guarde dados de cartão nem segredos nestas colunas.
 
-// PostgreSQL
-$pdo = new PDO('pgsql:host=127.0.0.1;port=5432;dbname=sisp', $user, $password);
-```
-
-Configure o PDO para lançar exceções:
+## Migração controlada
 
 ```php
+use Kowts\Sisp\Infrastructure\Persistence\SispSchema;
+
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-```
-
-## Migrações da aplicação
-
-Para deixar a gestão do esquema a cargo do framework, desative a migração
-automática e aplique as instruções devolvidas por `SispSchema::statements()` no
-processo de migrações da aplicação. Indique o driver PDO usado pela ligação.
-
-```php
 $driver = (string) $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
-$statements = SispSchema::statements($driver);
+
+foreach (SispSchema::statements($driver) as $statement) {
+    $pdo->exec($statement);
+}
 ```
 
-```php
-$sisp = SispFactory::create(SispConfig::fromArray([
-    // Credenciais SISP.
-    'pdo' => $pdo,
-    'autoMigrate' => false,
-]));
-```
+Depois configure `autoMigrate` como `false`. Execute a migração com uma conta de
+base de dados de privilégio limitado e teste-a no mesmo motor e versão usados em
+produção.
 
-As credenciais, callbacks e dados de pagamento não devem ser usados como dados
-de teste numa base de dados partilhada.
+## Concorrência e cópias de segurança
+
+O armazenamento agrupa a criação do pedido e da tentativa numa transação PDO.
+Ainda assim, a aplicação deve impor idempotência por encomenda e observar falhas
+de ligação. Inclua as tabelas SISP nas cópias de segurança, monitorize espaço e
+defina uma política de retenção para logs e payloads redigidos.
