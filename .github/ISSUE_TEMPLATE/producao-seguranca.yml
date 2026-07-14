@@ -1,39 +1,39 @@
-name: Producao / seguranca
-description: Pedir ajuda sobre hardening, operacao, release, reconciliacao ou reporte de risco nao sensivel.
-title: "[Producao]: "
+name: Produção / segurança
+description: Pedir ajuda sobre hardening, operação, release, reconciliação ou reporte de risco não sensível.
+title: "[Produção]: "
 labels:
-  - producao
-  - seguranca
+  - produção
+  - segurança
 body:
   - type: markdown
     attributes:
       value: |
-        Vulnerabilidades devem ser reportadas pelo separador Security, nao por issue publica.
+        Vulnerabilidades devem ser reportadas pelo separador Security, não por issue pública.
   - type: dropdown
     id: area
     attributes:
-      label: Area
+        label: Área
       options:
-        - Configuracao de producao
+        - Configuração de produção
         - Logs / auditoria
-        - Reconciliacao
-        - Persistencia
+        - Reconciliação
+        - Persistência
         - CI / release
-        - Seguranca nao sensivel
+        - Segurança não sensível
         - Outro
     validations:
       required: true
   - type: textarea
     id: question
     attributes:
-      label: Questao
-      description: Descreva a duvida sem credenciais nem dados pessoais.
+      label: Questão
+      description: Descreva a dúvida sem credenciais nem dados pessoais.
     validations:
       required: true
   - type: textarea
     id: context
     attributes:
-      label: Contexto tecnico
+      label: Contexto técnico
       placeholder: |
         Ambiente:
         Framework:
@@ -44,9 +44,9 @@ body:
   - type: checkboxes
     id: confirmations
     attributes:
-      label: Confirmacoes
+      label: Confirmações
       options:
-        - label: Nao inclui segredos, dados de cartao, recibos reais ou dados pessoais.
+        - label: Não inclui segredos, dados de cartão, recibos reais ou dados pessoais.
           required: true
-        - label: Entendo que este projecto nao e oficial da SISP/Vinti4.
+        - label: Entendo que este projecto não é oficial da SISP/Vinti4.
           required: true

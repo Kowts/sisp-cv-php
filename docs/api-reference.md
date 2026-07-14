@@ -1,12 +1,12 @@
-# Referencia automatica da API
+# Referência automática da API
 
-> Ficheiro gerado automaticamente. Nao edite manualmente.
+> Ficheiro gerado automaticamente. Não edite manualmente.
 >
 > Para regenerar: `composer docs:api`.
 
-Esta referencia lista simbolos publicos em `src/` e os metodos publicos declarados.
+Esta referência lista símbolos públicos em `src/` e os métodos públicos declarados.
 
-## Indice
+## Índice
 
 - [`Kowts\Sisp\Application\Action\BuildPaymentRequest`](#kowtssispapplicationactionbuildpaymentrequest)
 - [`Kowts\Sisp\Application\Action\BuildPurchaseRequest`](#kowtssispapplicationactionbuildpurchaserequest)
@@ -43,7 +43,7 @@ Esta referencia lista simbolos publicos em `src/` e os metodos publicos declarad
 - Tipo: Classe
 - Ficheiro: `src/Application/Action/BuildPaymentRequest.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `__construct()`
 
@@ -63,7 +63,7 @@ public function handle(array $data): PaymentRequest
 - Tipo: Classe
 - Ficheiro: `src/Application/Action/BuildPurchaseRequest.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `handle()`
 
@@ -77,7 +77,7 @@ public static function handle(array $customer, ?DateTimeInterface $now = null): 
 - Tipo: Classe
 - Ficheiro: `src/Application/Builder/PaymentBuilder.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `__construct()`
 
@@ -193,7 +193,7 @@ public function build(): PaymentRequest
 - Tipo: Classe
 - Ficheiro: `src/Bridge/Laravel/SispServiceProvider.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `register()`
 
@@ -213,7 +213,7 @@ public function boot(): void
 - Tipo: Classe
 - Ficheiro: `src/Bridge/Symfony/SispBundle.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `getContainerExtension()`
 
@@ -227,7 +227,7 @@ public function getContainerExtension(): SispExtension
 - Tipo: Classe
 - Ficheiro: `src/Bridge/Symfony/SispExtension.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `load()`
 
@@ -241,7 +241,7 @@ public function load(array $configs, ContainerBuilder $container): void
 - Tipo: Classe
 - Ficheiro: `src/Bridge/Yii2/SispBootstrap.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `bootstrap()`
 
@@ -255,7 +255,7 @@ public function bootstrap($app): void
 - Tipo: Classe
 - Ficheiro: `src/Bridge/Yii2/SispComponent.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `getClient()`
 
@@ -275,7 +275,7 @@ public function __call($name, $arguments)
 - Tipo: Classe
 - Ficheiro: `src/Config/SispConfig.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `fromArray()`
 
@@ -319,7 +319,7 @@ public function autoMigrate(): bool
 - Tipo: Interface
 - Ficheiro: `src/Contract/PaymentIntentStore.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `reserve()`
 
@@ -345,7 +345,7 @@ public function find(string $key): ?array
 - Tipo: Interface
 - Ficheiro: `src/Contract/TransactionStore.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `storePaymentRequest()`
 
@@ -371,7 +371,7 @@ public function applyCallback(TransactionRecord $transaction, CallbackPayload $p
 - Tipo: Classe
 - Ficheiro: `src/Domain/Amount/SispAmount.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `toThousandths()`
 
@@ -407,7 +407,7 @@ public static function fromCents($cents): float
 - Tipo: Classe
 - Ficheiro: `src/Domain/ValueObject/CallbackPayload.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `__construct()`
 
@@ -433,7 +433,7 @@ public function toFormFields(): array
 - Tipo: Classe
 - Ficheiro: `src/Domain/ValueObject/PaymentRequest.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `__construct()`
 
@@ -453,7 +453,7 @@ public function toFormFields(): array
 - Tipo: Classe
 - Ficheiro: `src/Domain/ValueObject/SispCredentials.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `__construct()`
 
@@ -467,7 +467,7 @@ public function __construct(array $data)
 - Tipo: Classe
 - Ficheiro: `src/Domain/ValueObject/TransactionRecord.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `__construct()`
 
@@ -481,7 +481,7 @@ public function __construct(int $id, string $merchantRef, string $merchantSessio
 - Tipo: Classe
 - Ficheiro: `src/Infrastructure/Http/AutoSubmitForm.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `render()`
 
@@ -495,7 +495,7 @@ public static function render(string $action, array $fields, string $title = 'Re
 - Tipo: Classe
 - Ficheiro: `src/Infrastructure/Persistence/InMemoryPaymentIntentStore.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `reserve()`
 
@@ -521,7 +521,7 @@ public function find(string $key): ?array
 - Tipo: Classe
 - Ficheiro: `src/Infrastructure/Persistence/InMemoryTransactionStore.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `storePaymentRequest()`
 
@@ -547,7 +547,7 @@ public function applyCallback(TransactionRecord $transaction, CallbackPayload $p
 - Tipo: Classe
 - Ficheiro: `src/Infrastructure/Persistence/PdoPaymentIntentStore.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `__construct()`
 
@@ -579,7 +579,7 @@ public function find(string $key): ?array
 - Tipo: Classe
 - Ficheiro: `src/Infrastructure/Persistence/PdoTransactionStore.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `__construct()`
 
@@ -611,7 +611,7 @@ public function applyCallback(TransactionRecord $transaction, CallbackPayload $p
 - Tipo: Classe
 - Ficheiro: `src/Infrastructure/Persistence/SispSchema.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `migrate()`
 
@@ -631,7 +631,7 @@ public static function statements(): array
 - Tipo: Classe
 - Ficheiro: `src/Infrastructure/Security/Fingerprint.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `sha512Base64()`
 
@@ -681,7 +681,7 @@ public static function constantTimeEquals(string $expected, string $actual): boo
 - Tipo: Classe
 - Ficheiro: `src/Sisp.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `__construct()`
 
@@ -737,7 +737,7 @@ public function renderPaymentForm(PaymentRequest $request, string $title = 'Redi
 - Tipo: Classe
 - Ficheiro: `src/SispFactory.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `create()`
 
@@ -751,7 +751,7 @@ public static function create(SispConfig $config): Sisp
 - Tipo: Classe
 - Ficheiro: `src/Support/CountryCodeMapper.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `toNumeric()`
 
@@ -765,7 +765,7 @@ public static function toNumeric(string $alpha2Code): string
 - Tipo: Classe
 - Ficheiro: `src/Support/Generators.php`
 
-### Metodos publicos
+### Métodos públicos
 
 #### `merchantReference()`
 

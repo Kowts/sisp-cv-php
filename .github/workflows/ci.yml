@@ -23,7 +23,7 @@ jobs:
         php: ['8.1', '8.2', '8.3', '8.4']
 
     steps:
-      - name: Obter codigo
+      - name: Obter código
         uses: actions/checkout@v4
 
       - name: Configurar PHP
@@ -33,7 +33,7 @@ jobs:
           extensions: json, pdo, pdo_sqlite, sqlite3
           coverage: none
 
-      - name: Instalar dependencias
+      - name: Instalar dependências
         run: composer install --no-interaction --prefer-dist
 
       - name: Validar pacote Composer
@@ -54,13 +54,13 @@ jobs:
       - run: composer install --no-interaction --prefer-dist
       - run: composer cs
       - run: composer analyse
-      - name: Verificar referencia automatica da API
+      - name: Verificar referência automática da API
         run: composer docs:api:check
-      - name: Cobertura minima
+      - name: Cobertura mínima
         run: |
           composer coverage
           php tools/check-coverage.php build/coverage.xml 50
-      - name: Auditoria de dependencias
+      - name: Auditoria de dependências
         run: composer audit
 
   dependency-range:
@@ -71,10 +71,10 @@ jobs:
         include:
           - php: '8.1'
             composer_update_flags: '--prefer-lowest --prefer-stable'
-            label: dependencias minimas
+            label: dependências mínimas
           - php: '8.4'
             composer_update_flags: ''
-            label: dependencias recentes
+            label: dependências recentes
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2

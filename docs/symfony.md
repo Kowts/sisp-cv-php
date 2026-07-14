@@ -1,9 +1,9 @@
 # Symfony
 
-Registe `Kowts\Sisp\Bridge\Symfony\SispBundle` e configure o servico com os
-parametros SISP da aplicacao.
+Registe `Kowts\Sisp\Bridge\Symfony\SispBundle` e configure o serviço com os
+parâmetros SISP da aplicação.
 
-O servico principal fica em `kowts_sisp.client` e tambem pode ser injectado por
+O serviço principal fica em `kowts_sisp.client` e também pode ser injectado por
 tipo como `Kowts\Sisp\Sisp`.
 
 ```php

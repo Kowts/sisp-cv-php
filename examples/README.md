@@ -1,14 +1,14 @@
 # Exemplos
 
-Os exemplos usam dados ficticios. Troque URLs, POS ID e credenciais pelos
+Os exemplos usam dados fictícios. Troque URLs, POS ID e credenciais pelos
 valores fornecidos pela entidade adquirente.
 
-- `php-puro/ciclo-completo.php`: cliente PHP puro com PDO SQLite, criacao de
+- `php-puro/ciclo-completo.php`: cliente PHP puro com PDO SQLite, criação de
   pagamento e HTML de redirecionamento.
-- `laravel/PaymentController.php`: controller simples com injeccao de
+- `laravel/PaymentController.php`: controller simples com injecção de
   `Kowts\Sisp\Sisp`.
 - `symfony/PaymentController.php`: controller simples com autowiring.
 - `yii2/PaymentController.php`: controller simples usando `Yii::$app->sisp`.
 
-Nao exponha `posAutCode`, tokens, dados reais de cartao ou recibos reais nos
-exemplos da aplicacao.
+Não exponha `posAutCode`, tokens, dados reais de cartão ou recibos reais nos
+exemplos da aplicação.

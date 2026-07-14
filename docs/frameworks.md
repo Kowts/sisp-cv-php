@@ -1,18 +1,18 @@
 # Frameworks
 
-As bridges sao opcionais e nao adicionam regra de negocio.
+As bridges são opcionais e não adicionam regra de negócio.
 
 ## Laravel
 
-O Service Provider regista `Kowts\Sisp\Sisp` e o alias `sisp`. A configuracao
-padrao vive em `config/sisp.php`.
+O Service Provider regista `Kowts\Sisp\Sisp` e o alias `sisp`. A configuração
+padrão vive em `config/sisp.php`.
 
 ## Symfony
 
-O Bundle regista `kowts_sisp.config` e `kowts_sisp.client`. O alias publico para
-injeccao por tipo e `Kowts\Sisp\Sisp`.
+O Bundle regista `kowts_sisp.config` e `kowts_sisp.client`. O alias público para
+injecção por tipo e `Kowts\Sisp\Sisp`.
 
 ## Yii2
 
 `SispComponent` constroi o cliente a partir de uma propriedade `config` e delega
-chamadas ao core. Em producao, configure a persistencia explicitamente.
+chamadas ao core. Em produção, configure a persistência explicitamente.

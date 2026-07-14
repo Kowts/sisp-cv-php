@@ -1,20 +1,20 @@
 # Troubleshooting
 
-## Fingerprint invalido
+## Fingerprint inválido
 
 Verifique `posAutCode`, amount, timestamp, currency, transaction code,
 `merchantRef` e `merchantSession`. Qualquer espaco ou arredondamento diferente
 altera o fingerprint.
 
-## Callback nao encontra transacao
+## Callback não encontra transação
 
-Confirme que o pedido foi criado com persistencia e que `merchantRef` e
+Confirme que o pedido foi criado com persistência e que `merchantRef` e
 `merchantSession` do callback correspondem a tentativa enviada ao gateway.
 
-## Formulario nao redirecciona
+## Formulario não redirecciona
 
-O HTML auto-submit precisa de navegacao full-page. Se estiver a usar `fetch`,
-devolva os campos ao frontend e submeta um formulario real no browser.
+O HTML auto-submit precisa de navegação full-page. Se estiver a usar `fetch`,
+devolva os campos ao frontend e submeta um formulário real no browser.
 
 ## Composer falha em PHP 7.4
 

@@ -34,9 +34,9 @@
     "symfony/http-kernel": "^6.4 || ^7.0"
   },
   "suggest": {
-    "illuminate/support": "Necessario para usar o Service Provider Laravel.",
-    "symfony/dependency-injection": "Necessario para usar o bundle Symfony.",
-    "yiisoft/yii2": "Necessario para usar o componente Yii2."
+    "illuminate/support": "Necessário para usar o Service Provider Laravel.",
+    "symfony/dependency-injection": "Necessário para usar o bundle Symfony.",
+    "yiisoft/yii2": "Necessário para usar o componente Yii2."
   },
   "autoload": {
     "psr-4": {

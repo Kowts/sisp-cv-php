@@ -32,5 +32,5 @@ return Yii::$app->response->sendContentAsFile(
 );
 ```
 
-Em producao, prefira construir o cliente com PDO persistente para guardar
-transacoes e callbacks.
+Em produção, prefira construir o cliente com PDO persistente para guardar
+transações e callbacks.

@@ -1,10 +1,10 @@
 SISP CV para PHP
 Copyright (c) 2026 Kowts
 
-Este projecto e uma biblioteca independente para integrar pagamentos
-SISP/Vinti4 em aplicacoes PHP. Nao e um projecto oficial da SISP, da Vinti4,
+Este projecto é uma biblioteca independente para integrar pagamentos
+SISP/Vinti4 em aplicações PHP. Não é um projecto oficial da SISP, da Vinti4,
 de bancos adquirentes ou de qualquer entidade reguladora.
 
-Marcas, nomes de servicos e protocolos citados pertencem aos seus titulares.
-Credenciais, endpoints de producao e regras operacionais devem ser obtidos
+Marcas, nomes de serviços e protocolos citados pertencem aos seus titulares.
+Credenciais, endpoints de produção e regras operacionais devem ser obtidos
 pelos canais oficiais da entidade contratada pelo comerciante.

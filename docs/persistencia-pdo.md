@@ -1,6 +1,6 @@
-# Persistencia PDO
+# Persistência PDO
 
-`PdoTransactionStore` cria tabelas automaticamente quando `autoMigrate` esta
+`PdoTransactionStore` cria tabelas automaticamente quando `autoMigrate` está
 activo em `SispConfig`.
 
 Tabelas actuais:
@@ -15,7 +15,7 @@ Tabelas actuais:
 
 ## SQLite
 
-SQLite e o driver validado actualmente no CI planeado. Use:
+SQLite é o driver validado actualmente no CI planeado. Use:
 
 ```php
 $pdo = new PDO('sqlite:/var/app/sisp.sqlite');
@@ -23,6 +23,6 @@ $pdo = new PDO('sqlite:/var/app/sisp.sqlite');
 
 ## MySQL e PostgreSQL
 
-Adie uso automatico de `SispSchema` nesses motores ate a camada de schema ficar
-totalmente portavel. Em aplicacoes reais, converta os statements para migracoes
-do seu framework e valide locks/indices no motor final.
+Adie o uso automático de `SispSchema` nesses motores até a camada de schema ficar
+totalmente portável. Em aplicações reais, converta os statements para migrações
+do seu framework e valide locks/índices no motor final.

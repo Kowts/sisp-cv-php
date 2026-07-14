@@ -50,7 +50,7 @@ jobs:
         run: |
           cd dist
           sha256sum *.zip *.json > SHA256SUMS
-      - name: Atestar proveniencia do pacote
+      - name: Atestar proveniência do pacote
         uses: actions/attest-build-provenance@v2
         with:
           subject-path: dist/*.zip

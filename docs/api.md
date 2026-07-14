@@ -14,7 +14,7 @@ $sisp = SispFactory::create(SispConfig::fromArray([
 ]));
 ```
 
-## Criar pagamento sem persistencia
+## Criar pagamento sem persistência
 
 ```php
 $request = $sisp->payment()
@@ -24,7 +24,7 @@ $request = $sisp->payment()
     ->build();
 ```
 
-## Criar pagamento com persistencia
+## Criar pagamento com persistência
 
 ```php
 $request = $sisp->createPayment([
@@ -49,4 +49,4 @@ if (!$sisp->validateCallback($payload)) {
 $transaction = $sisp->handleCallback($payload);
 ```
 
-Consulte tambem a [referencia automatica](api-reference.md).
+Consulte também a [referência automática](api-reference.md).

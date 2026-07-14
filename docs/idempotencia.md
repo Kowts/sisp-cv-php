@@ -1,18 +1,18 @@
-# Idempotencia
+# Idempotência
 
-Pagamentos nao devem criar transacoes duplicadas quando o utilizador recarrega
-a pagina ou repete o checkout.
+Pagamentos não devem criar transações duplicadas quando o utilizador recarrega
+a página ou repete o checkout.
 
 O pacote ja inclui `PaymentIntentStore` como porta para reservar uma chave de
-checkout e ligar essa chave a uma transacao. A aplicacao pode usar essa porta
+checkout e ligar essa chave a uma transação. A aplicação pode usar essa porta
 para guardar `checkout_intent_id` ou outro identificador unico por compra.
 
-## Recomendacao
+## Recomendação
 
 - gere uma chave por checkout;
 - reserve antes de construir o pedido SISP;
 - ligue a chave ao `transaction_id` depois de persistir o pedido;
-- em repeticao da mesma chave, reutilize a transacao existente.
+- em repetição da mesma chave, reutilize a transação existente.
 
-Idempotencia nao substitui fingerprints. Fingerprints provam integridade da
-mensagem SISP; idempotencia evita duplicacao local.
+Idempotência não substitui fingerprints. Fingerprints provam integridade da
+mensagem SISP; idempotência evita duplicação local.

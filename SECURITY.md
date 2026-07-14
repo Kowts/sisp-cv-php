@@ -1,18 +1,18 @@
-# Seguranca
+# Segurança
 
-Nao publique vulnerabilidades, credenciais ou dados de pagamento numa issue.
+Não publique vulnerabilidades, credenciais ou dados de pagamento numa issue.
 
-Use o separador **Security** do repositorio GitHub para relatorios privados.
-Inclua a versao afectada, impacto, forma de reproducao com dados ficticios e,
-se possivel, uma proposta de correcao.
+Use o separador **Security** do repositório GitHub para relatórios privados.
+Inclua a versão afectada, impacto, forma de reprodução com dados fictícios e,
+se possível, uma proposta de correcção.
 
 Nunca envie:
 
 - `posAutCode`, tokens, passwords, secrets ou chaves de API;
-- PAN completo, CVV, PIN, dados reais de cartao ou recibos reais;
+- PAN completo, CVV, PIN, dados reais de cartão ou recibos reais;
 - dados pessoais de clientes;
 - URLs internas, logs ou payloads sem anonimizar.
 
-Use fixtures artificiais e reduza os exemplos ao minimo. Ate a versao `1.0.0`,
-fixe uma versao exacta do pacote em producao e reveja o changelog antes de
+Use fixtures artificiais e reduza os exemplos ao mínimo. Até a versão `1.0.0`,
+fixe uma versão exacta do pacote em produção e reveja o changelog antes de
 actualizar.

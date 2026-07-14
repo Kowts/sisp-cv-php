@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Gera uma referencia Markdown da API publica sem carregar dependencias
+ * Gera uma referência Markdown da API pública sem carregar dependências
  * opcionais de framework.
  */
 
@@ -30,7 +30,7 @@ usort($symbols, static function (array $left, array $right): int {
 });
 
 file_put_contents($target, renderMarkdown($symbols));
-echo 'API gerada em docs/api-reference.md com '.count($symbols)." simbolos.\n";
+echo 'API gerada em docs/api-reference.md com '.count($symbols)." símbolos.\n";
 
 /**
  * @return null|array{type:string,name:string,namespace:string,fqcn:string,summary:string,file:string,methods:array<int,array{name:string,signature:string,summary:string}>}
@@ -254,15 +254,15 @@ function normalisePath(string $path): string
 function renderMarkdown(array $symbols): string
 {
     $lines = [
-        '# Referencia automatica da API',
+        '# Referência automática da API',
         '',
-        '> Ficheiro gerado automaticamente. Nao edite manualmente.',
+        '> Ficheiro gerado automaticamente. Não edite manualmente.',
         '>',
         '> Para regenerar: `composer docs:api`.',
         '',
-        'Esta referencia lista simbolos publicos em `src/` e os metodos publicos declarados.',
+        'Esta referência lista símbolos públicos em `src/` e os métodos públicos declarados.',
         '',
-        '## Indice',
+        '## Índice',
         '',
     ];
 
@@ -285,7 +285,7 @@ function renderMarkdown(array $symbols): string
         }
 
         $lines[] = '';
-        $lines[] = '### Metodos publicos';
+        $lines[] = '### Métodos públicos';
         $lines[] = '';
 
         foreach ($symbol['methods'] as $method) {

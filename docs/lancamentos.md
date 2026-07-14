@@ -1,4 +1,4 @@
-# Lancamentos
+# Lançamentos
 
 Releases usam tags `v*`.
 
@@ -16,8 +16,8 @@ O workflow de release cria:
 - arquivo Composer `.zip`;
 - SBOM CycloneDX;
 - checksums SHA-256;
-- atestacoes de proveniencia;
+- atestações de proveniência;
 - GitHub Release com notas automaticas.
 
-Enquanto o pacote estiver abaixo de `1.0.0`, fixe versoes exactas em producao e
+Enquanto o pacote estiver abaixo de `1.0.0`, fixe versoes exactas em produção e
 leia o changelog antes de actualizar.

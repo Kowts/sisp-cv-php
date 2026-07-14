@@ -1,6 +1,6 @@
 # Laravel
 
-Publique a configuracao:
+Publique a configuração:
 
 ```bash
 php artisan vendor:publish --tag=sisp-config
