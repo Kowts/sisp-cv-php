@@ -1,3 +1,5 @@
+![SISP CV para PHP](assets/sisp-cv-php-banner.png)
+
 # SISP CV para PHP
 
 [![Testes](https://github.com/Kowts/sisp-cv-php/actions/workflows/ci.yml/badge.svg)](https://github.com/Kowts/sisp-cv-php/actions/workflows/ci.yml)
