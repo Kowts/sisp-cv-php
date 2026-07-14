@@ -55,7 +55,7 @@ jobs:
         with:
           subject-path: dist/*.zip
       - name: Atestar SBOM
-        uses: actions/attest-sbom@v2
+        uses: actions/attest-sbom@v4
         with:
           subject-path: dist/*.zip
           sbom-path: dist/sisp-cv-${{ github.ref_name }}.sbom.cdx.json
