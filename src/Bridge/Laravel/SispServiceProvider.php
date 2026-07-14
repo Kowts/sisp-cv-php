@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Kowts\Sisp\Bridge\Laravel;
 
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Kowts\Sisp\Config\SispConfig;
 use Kowts\Sisp\Sisp;
@@ -15,8 +17,11 @@ final class SispServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../../../config/sisp.php', 'sisp');
 
-        $this->app->singleton(Sisp::class, function (): Sisp {
-            return SispFactory::create(SispConfig::fromArray((array) config('sisp', [])));
+        $this->app->singleton(Sisp::class, static function (Application $app): Sisp {
+            $repository = $app->make('config');
+            $config = $repository instanceof ConfigRepository ? $repository->get('sisp', []) : [];
+
+            return SispFactory::create(SispConfig::fromArray(is_array($config) ? $config : []));
         });
 
         $this->app->alias(Sisp::class, 'sisp');
@@ -24,10 +29,13 @@ final class SispServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        if (method_exists($this, 'publishes')) {
-            $this->publishes([
-                __DIR__ . '/../../../config/sisp.php' => config_path('sisp.php'),
-            ], 'sisp-config');
-        }
+        $this->publishes([
+            __DIR__ . '/../../../config/sisp.php' => $this->applicationConfigPath('sisp.php'),
+        ], 'sisp-config');
+    }
+
+    private function applicationConfigPath(string $path): string
+    {
+        return $this->app->configPath($path);
     }
 }

@@ -28,6 +28,7 @@ final class SispComponent extends Component
     }
 
     /**
+     * @param string $name
      * @param mixed[] $arguments
      * @return mixed
      */

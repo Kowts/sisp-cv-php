@@ -13,7 +13,7 @@ final class SispBootstrap implements BootstrapInterface
      */
     public function bootstrap($app): void
     {
-        if (! isset($app->sisp) && method_exists($app, 'set')) {
+        if (is_object($app) && ! isset($app->sisp) && method_exists($app, 'set')) {
             $app->set('sisp', ['class' => SispComponent::class]);
         }
     }
