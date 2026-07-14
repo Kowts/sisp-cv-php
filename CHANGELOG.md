@@ -7,6 +7,11 @@ o projecto adopta [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ## [Não publicado]
 
+### Alterado
+
+- Documentação pública, operacional e de integração expandida para PHP puro,
+  persistência PDO, callbacks, idempotência, segurança e frameworks.
+
 ## [0.2.0] - 2026-07-14
 
 ### Adicionado
