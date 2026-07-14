@@ -126,6 +126,29 @@ final class CallbackPayload
     }
 
     /**
+     * @return array<string,string>
+     */
+    public function toSafeLogContext(): array
+    {
+        return [
+            'merchantRef' => $this->merchantRef,
+            'merchantSession' => $this->merchantSession,
+            'transactionID' => (string) $this->transactionID,
+            'messageType' => $this->messageType,
+            'merchantResponse' => $this->merchantResponse,
+            'responseCode' => $this->responseCode,
+            'currency' => $this->currency,
+            'transactionCode' => $this->transactionCode,
+            'pan' => $this->maskedPan(),
+        ];
+    }
+
+    private function maskedPan(): string
+    {
+        return $this->pan === '' ? '' : '***redacted***';
+    }
+
+    /**
      * @param mixed $value
      */
     private static function text($value): string

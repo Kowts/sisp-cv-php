@@ -31,4 +31,22 @@ final class PaymentBuilderTest extends TestCase
         self::assertNotSame('', $request->fingerprint);
         self::assertStringContainsString('FingerPrint=', $sisp->gatewayFormAction($request));
     }
+
+    public function testRejectsInvalidCorePaymentFields(): void
+    {
+        $sisp = SispFactory::create(SispConfig::fromArray([
+            'posId' => '90051',
+            'posAutCode' => 'secret',
+            'url' => 'https://gateway.example/pay',
+            'urlMerchantResponse' => 'https://app.example/callback',
+        ]));
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $sisp->payment()
+            ->amount('0')
+            ->merchantRef('R1')
+            ->merchantSession('S1')
+            ->build();
+    }
 }

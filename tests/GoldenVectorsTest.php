@@ -82,4 +82,20 @@ final class GoldenVectorsTest extends TestCase
         self::assertSame(803, SispAmount::toCents('8.0295'));
         self::assertSame(-7001, SispAmount::toThousandths('-7.0005'));
     }
+
+    public function testCallbackSafeLogContextRedactsSensitiveValues(): void
+    {
+        $payload = CallbackPayload::fromPost([
+            'merchantRespMerchantRef' => 'R1',
+            'merchantRespMerchantSession' => 'S1',
+            'merchantRespTid' => 'T1',
+            'merchantRespPan' => '****-****-****-1234',
+            'resultFingerPrint' => 'sensitive-fingerprint',
+            'merchantRespClientReceipt' => 'sensitive-receipt',
+        ]);
+
+        self::assertSame('***redacted***', $payload->toSafeLogContext()['pan']);
+        self::assertArrayNotHasKey('fingerprint', $payload->toSafeLogContext());
+        self::assertArrayNotHasKey('clientReceipt', $payload->toSafeLogContext());
+    }
 }

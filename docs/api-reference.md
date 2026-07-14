@@ -427,6 +427,12 @@ public static function fromPost(array $post): self
 public function toFormFields(): array
 ```
 
+#### `toSafeLogContext()`
+
+```php
+public function toSafeLogContext(): array
+```
+
 
 ## `Kowts\Sisp\Domain\ValueObject\PaymentRequest`
 

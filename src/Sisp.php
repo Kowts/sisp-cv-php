@@ -8,6 +8,7 @@ use Kowts\Sisp\Application\Action\BuildPaymentRequest;
 use Kowts\Sisp\Application\Builder\PaymentBuilder;
 use Kowts\Sisp\Contract\TransactionStore;
 use Kowts\Sisp\Domain\TransactionStatus;
+use Kowts\Sisp\Domain\Amount\SispAmount;
 use Kowts\Sisp\Infrastructure\Http\AutoSubmitForm;
 use Kowts\Sisp\Infrastructure\Security\Fingerprint;
 use Kowts\Sisp\Domain\ValueObject\CallbackPayload;
@@ -79,7 +80,32 @@ final class Sisp
             return null;
         }
 
+        if (! $this->callbackMatchesTransaction($payload, $transaction)) {
+            return null;
+        }
+
+        if ($transaction->status !== TransactionStatus::PENDING) {
+            return $transaction;
+        }
+
         return $this->transactionStore->applyCallback($transaction, $payload, $this->statusFromCallback($payload));
+    }
+
+    private function callbackMatchesTransaction(CallbackPayload $payload, TransactionRecord $transaction): bool
+    {
+        if (SispAmount::toThousandths($payload->amount) !== SispAmount::toThousandths($transaction->amount)) {
+            return false;
+        }
+
+        if ($payload->currencyProvided && $payload->currency !== $transaction->currency) {
+            return false;
+        }
+
+        if ($payload->transactionCodeProvided && $payload->transactionCode !== $transaction->transactionCode) {
+            return false;
+        }
+
+        return ! $payload->posIDProvided || $payload->posID === $this->credentials->posId;
     }
 
     public function gatewayFormAction(PaymentRequest $request): string

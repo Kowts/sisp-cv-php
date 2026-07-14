@@ -6,6 +6,8 @@ namespace Kowts\Sisp\Application\Action;
 
 use Kowts\Sisp\Infrastructure\Security\Fingerprint;
 use Kowts\Sisp\Support\Generators;
+use Kowts\Sisp\Domain\Amount\SispAmount;
+use Kowts\Sisp\Domain\TransactionCode;
 use Kowts\Sisp\Domain\ValueObject\PaymentRequest;
 use Kowts\Sisp\Domain\ValueObject\SispCredentials;
 use InvalidArgumentException;
@@ -52,7 +54,38 @@ final class BuildPaymentRequest
             $request
         );
 
+        $this->validatePayment($request);
+
         return new PaymentRequest($request);
+    }
+
+    /**
+     * @param array<string,mixed> $request
+     */
+    private function validatePayment(array $request): void
+    {
+        if (SispAmount::toThousandths($request['amount']) <= 0) {
+            throw new InvalidArgumentException('SISP payment amount must be greater than zero.');
+        }
+
+        foreach (['merchantRef', 'merchantSession'] as $field) {
+            $value = (string) $request[$field];
+            if ($value === '' || strlen($value) > 64) {
+                throw new InvalidArgumentException("SISP {$field} must contain between 1 and 64 characters.");
+            }
+        }
+
+        if (preg_match('/^\d{3}$/', (string) $request['currency']) !== 1) {
+            throw new InvalidArgumentException('SISP currency must be a three-digit numeric code.');
+        }
+
+        if (! in_array($request['transactionCode'], [TransactionCode::PURCHASE, TransactionCode::REFUND], true)) {
+            throw new InvalidArgumentException('Unsupported SISP transaction code.');
+        }
+
+        if (filter_var((string) $request['urlMerchantResponse'], FILTER_VALIDATE_URL) === false) {
+            throw new InvalidArgumentException('SISP callback URL must be a valid absolute URL.');
+        }
     }
 
     /**

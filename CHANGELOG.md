@@ -7,6 +7,11 @@ o projecto adopta [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ## [Não publicado]
 
+### Segurança
+
+- Validação reforçada para pedidos de pagamento e correspondência estrita de callbacks com a transacção original.
+- Callbacks repetidos já não fazem regredir transacções em estado final; foi adicionado um contexto de registo que omite dados sensíveis.
+
 ### Alterado
 
 - Documentação pública, operacional e de integração expandida para PHP puro,
