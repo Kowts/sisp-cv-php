@@ -1,6 +1,8 @@
 # Arquitectura
 
-O pacote separa o domínio SISP/Vinti4 das integrações de framework.
+O pacote separa o domínio SISP/Vinti4 das integrações de framework. O core não
+depende de Laravel, Symfony, Yii2, HTTP do framework ou uma base de dados
+específica.
 
 ```mermaid
 flowchart TD
@@ -37,3 +39,11 @@ framework para `SispConfig` e registam `Kowts\Sisp\Sisp` no container.
   driver PDO;
 - os três motores são validados no CI: SQLite em memória, MySQL e PostgreSQL
   em serviços efémeros.
+
+## Limites de responsabilidade
+
+O core constrói pedidos, valida callbacks e persiste o ciclo técnico da
+transação. A aplicação continua responsável por encomendas, autorização de
+utilizadores, stock, documentos, comunicação ao cliente e regras de entrega.
+As bridges apenas adaptam configuração e injeção de dependências; não devem
+introduzir comportamento de pagamento diferente do PHP puro.

@@ -11,6 +11,10 @@ composer docs:api:check
 composer audit
 ```
 
+Actualize `CHANGELOG.md`, confirme que a referência automática não tem diff e
+crie uma tag anotada, por exemplo `v0.3.0`. Não altere uma tag já publicada;
+publique uma nova versão para qualquer correcção distribuível.
+
 O workflow de release cria:
 
 - arquivo Composer `.zip`;

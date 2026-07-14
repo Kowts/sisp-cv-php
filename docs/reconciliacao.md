@@ -1,6 +1,6 @@
 # Reconciliação
 
-Reconciliação e o processo de confirmar transações locais que ficaram
+Reconciliação é o processo de confirmar transações locais que ficaram
 `pending` depois do callback ou de falhas de rede.
 
 ## Estado actual
@@ -17,6 +17,13 @@ sem alterar as bridges Laravel, Symfony ou Yii2.
   `merchantRef` e `merchantSession`;
 - mantenha log de quem reconciliou e quando;
 - nunca trate ausência de callback como sucesso.
+
+## Registo e aprovação
+
+Defina quem pode reconciliar, que prova é exigida e onde fica registada a
+decisão. Guarde referência local, sessão, identificador do gateway, origem da
+confirmação, operador e data. Uma reconciliação manual deve ser reversível por
+auditoria, não por eliminação de dados.
 
 ## Futuro cliente transaction-status
 

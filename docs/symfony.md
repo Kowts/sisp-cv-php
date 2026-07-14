@@ -24,3 +24,8 @@ final class PaymentController
     }
 }
 ```
+
+Mantenha `posAutCode` em variáveis de ambiente processadas pelo contentor ou num
+gestor de segredos. Para callbacks, use um controller separado, valide o
+payload antes de qualquer alteração de encomenda e responda sem depender da
+sessão do browser.

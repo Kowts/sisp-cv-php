@@ -33,4 +33,5 @@ return Yii::$app->response->sendContentAsFile(
 ```
 
 Em produção, prefira construir o cliente com PDO persistente para guardar
-transações e callbacks.
+transações e callbacks. O componente não deve receber credenciais do pedido HTTP
+nem dados do cartão; entregue apenas a configuração estável da aplicação.

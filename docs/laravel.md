@@ -1,5 +1,8 @@
 # Laravel
 
+O provider é descoberto pelo Composer. Publique a configuração apenas quando
+precisar de a adaptar; em seguida, use variáveis de ambiente para credenciais.
+
 Publique a configuração:
 
 ```bash
@@ -31,3 +34,7 @@ public function pay(Sisp $sisp)
     return response($sisp->renderPaymentForm($request));
 }
 ```
+
+O endpoint de callback deve chamar `CallbackPayload::fromPost($request->all())`,
+validar o fingerprint e delegar em `handleCallback()`. Devolva uma resposta HTTP
+curta; a página de resultado do utilizador deve consultar o estado local.
