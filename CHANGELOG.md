@@ -7,6 +7,18 @@ o projecto adopta [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ## [Não publicado]
 
+## [0.2.0] - 2026-07-14
+
+### Adicionado
+
+- Suporte de persistência PDO para MySQL/MariaDB e PostgreSQL, além de SQLite.
+- Testes de integração para os três motores em serviços efémeros no GitHub Actions.
+
+### Alterado
+
+- `SispSchema` escolhe a definição do esquema pelo driver PDO.
+- PostgreSQL recebe o identificador da transação criada por `RETURNING id`.
+
 ## [0.1.0] - 2026-07-14
 
 ### Adicionado
