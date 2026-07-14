@@ -33,7 +33,9 @@ final class BuildPaymentRequest
             'amount' => $data['amount'] ?? 0,
             'currency' => (string) ($data['currency'] ?? $this->credentials->currency),
             'is3DSec' => $this->credentials->is3DSec,
-            'urlMerchantResponse' => (string) ($data['urlMerchantResponse'] ?? $this->credentials->urlMerchantResponse),
+            'urlMerchantResponse' => (string) (
+                $data['urlMerchantResponse'] ?? $this->credentials->urlMerchantResponse
+            ),
             'languageMessages' => $this->credentials->languageMessages,
             'timeStamp' => (string) ($data['timeStamp'] ?? Generators::timeStamp()),
             'fingerprintversion' => $this->credentials->fingerprintVersion,
@@ -45,7 +47,10 @@ final class BuildPaymentRequest
             'purchaseRequest' => $this->buildPurchaseRequestIfNeeded($data),
         ];
 
-        $request['fingerprint'] = Fingerprint::payment(Fingerprint::computeToken($this->credentials->posAutCode), $request);
+        $request['fingerprint'] = Fingerprint::payment(
+            Fingerprint::computeToken($this->credentials->posAutCode),
+            $request
+        );
 
         return new PaymentRequest($request);
     }
@@ -76,7 +81,7 @@ final class BuildPaymentRequest
         }
 
         if ($missing !== []) {
-            throw new InvalidArgumentException('Missing 3DS customer fields: '.implode(', ', $missing).'.');
+            throw new InvalidArgumentException('Missing 3DS customer fields: ' . implode(', ', $missing) . '.');
         }
 
         return BuildPurchaseRequest::handle([

@@ -13,7 +13,7 @@ final class SispServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../../../config/sisp.php', 'sisp');
+        $this->mergeConfigFrom(__DIR__ . '/../../../config/sisp.php', 'sisp');
 
         $this->app->singleton(Sisp::class, function (): Sisp {
             return SispFactory::create(SispConfig::fromArray((array) config('sisp', [])));
@@ -26,7 +26,7 @@ final class SispServiceProvider extends ServiceProvider
     {
         if (method_exists($this, 'publishes')) {
             $this->publishes([
-                __DIR__.'/../../../config/sisp.php' => config_path('sisp.php'),
+                __DIR__ . '/../../../config/sisp.php' => config_path('sisp.php'),
             ], 'sisp-config');
         }
     }

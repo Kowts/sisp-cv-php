@@ -34,7 +34,8 @@ final class SispSchema
                 created_at VARCHAR(32) NOT NULL,
                 updated_at VARCHAR(32) NOT NULL
             )',
-            'CREATE UNIQUE INDEX IF NOT EXISTS sisp_transactions_identifiers_unique ON sisp_transactions (merchant_ref, merchant_session)',
+            'CREATE UNIQUE INDEX IF NOT EXISTS sisp_transactions_identifiers_unique '
+                . 'ON sisp_transactions (merchant_ref, merchant_session)',
             'CREATE TABLE IF NOT EXISTS sisp_transaction_attempts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 transaction_id INTEGER NOT NULL,

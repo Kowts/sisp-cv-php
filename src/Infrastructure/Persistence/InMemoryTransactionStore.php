@@ -46,8 +46,11 @@ final class InMemoryTransactionStore implements TransactionStore
         return null;
     }
 
-    public function applyCallback(TransactionRecord $transaction, CallbackPayload $payload, string $status): TransactionRecord
-    {
+    public function applyCallback(
+        TransactionRecord $transaction,
+        CallbackPayload $payload,
+        string $status
+    ): TransactionRecord {
         $updated = new TransactionRecord(
             $transaction->id,
             $transaction->merchantRef,

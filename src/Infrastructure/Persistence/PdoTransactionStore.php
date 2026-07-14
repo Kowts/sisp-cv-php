@@ -33,8 +33,11 @@ final class PdoTransactionStore implements TransactionStore
 
         try {
             $statement = $this->pdo->prepare(
-                'INSERT INTO sisp_transactions (merchant_ref, merchant_session, amount, currency, transaction_code, status, payload, created_at, updated_at)
-                 VALUES (:merchant_ref, :merchant_session, :amount, :currency, :transaction_code, :status, :payload, :created_at, :updated_at)'
+                'INSERT INTO sisp_transactions '
+                . '(merchant_ref, merchant_session, amount, currency, transaction_code, status, payload, '
+                . 'created_at, updated_at) '
+                . 'VALUES (:merchant_ref, :merchant_session, :amount, :currency, :transaction_code, :status, '
+                . ':payload, :created_at, :updated_at)'
             );
             $statement->execute([
                 'merchant_ref' => $request->merchantRef,
@@ -51,8 +54,10 @@ final class PdoTransactionStore implements TransactionStore
             $id = (int) $this->pdo->lastInsertId();
 
             $attempt = $this->pdo->prepare(
-                'INSERT INTO sisp_transaction_attempts (transaction_id, merchant_ref, merchant_session, status, payload, created_at, updated_at)
-                 VALUES (:transaction_id, :merchant_ref, :merchant_session, :status, :payload, :created_at, :updated_at)'
+                'INSERT INTO sisp_transaction_attempts '
+                . '(transaction_id, merchant_ref, merchant_session, status, payload, created_at, updated_at) '
+                . 'VALUES (:transaction_id, :merchant_ref, :merchant_session, :status, :payload, '
+                . ':created_at, :updated_at)'
             );
             $attempt->execute([
                 'transaction_id' => $id,
@@ -75,23 +80,34 @@ final class PdoTransactionStore implements TransactionStore
 
     public function findByMerchantIdentifiers(string $merchantRef, string $merchantSession): ?TransactionRecord
     {
-        $statement = $this->pdo->prepare('SELECT * FROM sisp_transactions WHERE merchant_ref = :merchant_ref AND merchant_session = :merchant_session LIMIT 1');
+        $statement = $this->pdo->prepare(
+            'SELECT * FROM sisp_transactions '
+            . 'WHERE merchant_ref = :merchant_ref AND merchant_session = :merchant_session LIMIT 1'
+        );
         $statement->execute(['merchant_ref' => $merchantRef, 'merchant_session' => $merchantSession]);
         $row = $statement->fetch(PDO::FETCH_ASSOC);
 
         return $row ? $this->recordFromRow($row) : null;
     }
 
-    public function applyCallback(TransactionRecord $transaction, CallbackPayload $payload, string $status): TransactionRecord
-    {
+    public function applyCallback(
+        TransactionRecord $transaction,
+        CallbackPayload $payload,
+        string $status
+    ): TransactionRecord {
         $now = gmdate('c');
-        $encoded = json_encode(array_merge($transaction->payload, ['callback' => $payload->toFormFields()]), JSON_UNESCAPED_SLASHES);
+        $encoded = json_encode(
+            array_merge($transaction->payload, ['callback' => $payload->toFormFields()]),
+            JSON_UNESCAPED_SLASHES
+        );
 
         $this->pdo->beginTransaction();
 
         try {
             $statement = $this->pdo->prepare(
-                'UPDATE sisp_transactions SET status = :status, gateway_transaction_id = :gateway_transaction_id, payload = :payload, updated_at = :updated_at WHERE id = :id'
+                'UPDATE sisp_transactions SET status = :status, '
+                . 'gateway_transaction_id = :gateway_transaction_id, payload = :payload, '
+                . 'updated_at = :updated_at WHERE id = :id'
             );
             $statement->execute([
                 'status' => $status,
@@ -102,8 +118,11 @@ final class PdoTransactionStore implements TransactionStore
             ]);
 
             $attempt = $this->pdo->prepare(
-                'UPDATE sisp_transaction_attempts SET status = :status, gateway_transaction_id = :gateway_transaction_id, payload = :payload, updated_at = :updated_at
-                 WHERE transaction_id = :transaction_id AND merchant_ref = :merchant_ref AND merchant_session = :merchant_session'
+                'UPDATE sisp_transaction_attempts SET status = :status, '
+                . 'gateway_transaction_id = :gateway_transaction_id, payload = :payload, '
+                . 'updated_at = :updated_at '
+                . 'WHERE transaction_id = :transaction_id AND merchant_ref = :merchant_ref '
+                . 'AND merchant_session = :merchant_session'
             );
             $attempt->execute([
                 'status' => $status,

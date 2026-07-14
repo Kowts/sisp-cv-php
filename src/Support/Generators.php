@@ -35,7 +35,7 @@ final class Generators
         $time = base_convert((string) ($date->getTimestamp() * 1000), 10, 36);
         $randomLength = max(2, self::MAX_IDENTIFIER_LENGTH - strlen($prefix) - strlen($time));
 
-        return substr($prefix.$time.self::randomAlphanumeric($randomLength), 0, self::MAX_IDENTIFIER_LENGTH);
+        return substr($prefix . $time . self::randomAlphanumeric($randomLength), 0, self::MAX_IDENTIFIER_LENGTH);
     }
 
     private static function randomAlphanumeric(int $length): string

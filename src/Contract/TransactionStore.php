@@ -14,5 +14,9 @@ interface TransactionStore
 
     public function findByMerchantIdentifiers(string $merchantRef, string $merchantSession): ?TransactionRecord;
 
-    public function applyCallback(TransactionRecord $transaction, CallbackPayload $payload, string $status): TransactionRecord;
+    public function applyCallback(
+        TransactionRecord $transaction,
+        CallbackPayload $payload,
+        string $status
+    ): TransactionRecord;
 }

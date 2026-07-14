@@ -22,8 +22,11 @@ final class Sisp
     private string $transactionCode;
     private ?TransactionStore $transactionStore;
 
-    public function __construct(SispCredentials $credentials, string $transactionCode = '1', ?TransactionStore $transactionStore = null)
-    {
+    public function __construct(
+        SispCredentials $credentials,
+        string $transactionCode = '1',
+        ?TransactionStore $transactionStore = null
+    ) {
         $this->credentials = $credentials;
         $this->transactionCode = $transactionCode;
         $this->transactionStore = $transactionStore;
@@ -67,7 +70,10 @@ final class Sisp
             return null;
         }
 
-        $transaction = $this->transactionStore->findByMerchantIdentifiers($payload->merchantRef, $payload->merchantSession);
+        $transaction = $this->transactionStore->findByMerchantIdentifiers(
+            $payload->merchantRef,
+            $payload->merchantSession
+        );
 
         if ($transaction === null) {
             return null;
@@ -90,7 +96,7 @@ final class Sisp
             'FingerPrintVersion' => $request->fingerprintversion,
         ]);
 
-        return $endpoint.(strpos($endpoint, '?') === false ? '?' : '&').$query;
+        return $endpoint . (strpos($endpoint, '?') === false ? '?' : '&') . $query;
     }
 
     public function renderPaymentForm(PaymentRequest $request, string $title = 'Redirecting to SISP'): string
@@ -104,7 +110,10 @@ final class Sisp
             return TransactionStatus::COMPLETED;
         }
 
-        if ($payload->messageType === '6' || ($payload->merchantResponse !== '' && $payload->merchantResponse !== '00')) {
+        if (
+            $payload->messageType === '6'
+            || ($payload->merchantResponse !== '' && $payload->merchantResponse !== '00')
+        ) {
             return TransactionStatus::FAILED;
         }
 

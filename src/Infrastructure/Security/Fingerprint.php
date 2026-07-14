@@ -25,13 +25,13 @@ final class Fingerprint
     public static function payment(string $token, array $data): string
     {
         $content = $token
-            .($data['timeStamp'] ?? '')
-            .SispAmount::toThousandths($data['amount'] ?? 0)
-            .($data['merchantRef'] ?? '')
-            .($data['merchantSession'] ?? '')
-            .($data['posID'] ?? '')
-            .($data['currency'] ?? '')
-            .($data['transactionCode'] ?? '');
+            . ($data['timeStamp'] ?? '')
+            . SispAmount::toThousandths($data['amount'] ?? 0)
+            . ($data['merchantRef'] ?? '')
+            . ($data['merchantSession'] ?? '')
+            . ($data['posID'] ?? '')
+            . ($data['currency'] ?? '')
+            . ($data['transactionCode'] ?? '');
 
         return self::sha512Base64($content);
     }

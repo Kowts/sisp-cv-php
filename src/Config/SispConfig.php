@@ -24,7 +24,8 @@ final class SispConfig
         $this->credentials = new SispCredentials($data);
         $this->transactionCode = (string) ($data['transactionCode'] ?? '1');
         $this->pdo = isset($data['pdo']) && $data['pdo'] instanceof PDO ? $data['pdo'] : null;
-        $this->transactionStore = isset($data['transactionStore']) && $data['transactionStore'] instanceof TransactionStore
+        $this->transactionStore = isset($data['transactionStore'])
+            && $data['transactionStore'] instanceof TransactionStore
             ? $data['transactionStore']
             : null;
         $this->autoMigrate = (bool) ($data['autoMigrate'] ?? true);

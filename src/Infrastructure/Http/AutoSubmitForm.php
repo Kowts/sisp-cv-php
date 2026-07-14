@@ -22,16 +22,18 @@ final class AutoSubmitForm
         }
 
         return '<!DOCTYPE html>'
-            .'<html><head>'
-            .'<title>'.self::escape($title).'</title>'
-            ."<meta charset='utf-8'>"
-            .'</head>'
-            ."<body onload='document.forms[0].submit()'>"
-            ."<form action='".self::escape($action)."' method='post'>"
-            .$inputs
-            .'</form>'
-            .'<noscript><p>JavaScript is disabled. <a href="#" onclick="document.forms[0].submit(); return false;">Click here</a> to continue.</p></noscript>'
-            .'</body></html>';
+            . '<html><head>'
+            . '<title>' . self::escape($title) . '</title>'
+            . "<meta charset='utf-8'>"
+            . '</head>'
+            . "<body onload='document.forms[0].submit()'>"
+            . "<form action='" . self::escape($action) . "' method='post'>"
+            . $inputs
+            . '</form>'
+            . '<noscript><p>JavaScript is disabled. '
+            . '<a href="#" onclick="document.forms[0].submit(); return false;">Click here</a> '
+            . 'to continue.</p></noscript>'
+            . '</body></html>';
     }
 
     private static function escape(string $value): string

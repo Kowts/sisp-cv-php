@@ -27,13 +27,26 @@ final class PdoPaymentIntentStore implements PaymentIntentStore
             'INSERT INTO sisp_payment_intents (intent_key, status, created_at, updated_at)
              VALUES (:intent_key, :status, :created_at, :updated_at)'
         );
-        $statement->execute(['intent_key' => $key, 'status' => $status, 'created_at' => $now, 'updated_at' => $now]);
+        $statement->execute([
+            'intent_key' => $key,
+            'status' => $status,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
     }
 
     public function link(string $key, int $transactionId): void
     {
-        $statement = $this->pdo->prepare('UPDATE sisp_payment_intents SET transaction_id = :transaction_id, status = :status, updated_at = :updated_at WHERE intent_key = :intent_key');
-        $statement->execute(['transaction_id' => $transactionId, 'status' => 'linked', 'updated_at' => gmdate('c'), 'intent_key' => $key]);
+        $statement = $this->pdo->prepare(
+            'UPDATE sisp_payment_intents SET transaction_id = :transaction_id, '
+            . 'status = :status, updated_at = :updated_at WHERE intent_key = :intent_key'
+        );
+        $statement->execute([
+            'transaction_id' => $transactionId,
+            'status' => 'linked',
+            'updated_at' => gmdate('c'),
+            'intent_key' => $key,
+        ]);
     }
 
     public function find(string $key): ?array
