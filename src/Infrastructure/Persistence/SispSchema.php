@@ -100,6 +100,7 @@ final class SispSchema
             'sqlite' => 'INTEGER PRIMARY KEY AUTOINCREMENT',
             'mysql' => 'BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY',
             'pgsql' => 'BIGSERIAL PRIMARY KEY',
+            default => throw new \LogicException('Driver PDO SISP inesperado.'),
         };
     }
 
@@ -109,6 +110,7 @@ final class SispSchema
             'sqlite' => 'INTEGER',
             'mysql' => 'BIGINT UNSIGNED',
             'pgsql' => 'BIGINT',
+            default => throw new \LogicException('Driver PDO SISP inesperado.'),
         };
     }
 
