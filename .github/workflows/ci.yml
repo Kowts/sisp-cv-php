@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Obter código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Configurar PHP
         uses: shivammathur/setup-php@v2
@@ -45,7 +45,7 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
@@ -76,7 +76,7 @@ jobs:
             composer_update_flags: ''
             label: dependências recentes
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
@@ -90,7 +90,7 @@ jobs:
   yii2:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
@@ -134,7 +134,7 @@ jobs:
       SISP_TEST_PGSQL_USER: postgres
       SISP_TEST_PGSQL_PASSWORD: root
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
