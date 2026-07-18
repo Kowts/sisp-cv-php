@@ -141,8 +141,8 @@ jobs:
       SISP_TEST_PGSQL_DSN: pgsql:host=127.0.0.1;port=5432;dbname=sisp
       SISP_TEST_PGSQL_USER: postgres
       SISP_TEST_PGSQL_PASSWORD: root
-      SISP_TEST_SQLSRV_DSN: sqlsrv:Server=127.0.0.1,1433;Database=sisp;LoginTimeout=5;TrustServerCertificate=1
-      SISP_TEST_SQLSRV_ADMIN_DSN: sqlsrv:Server=127.0.0.1,1433;Database=master;LoginTimeout=5;TrustServerCertificate=1
+      SISP_TEST_SQLSRV_DSN: sqlsrv:Server=127.0.0.1,1433;Database=sisp;Encrypt=no;LoginTimeout=5
+      SISP_TEST_SQLSRV_ADMIN_DSN: sqlsrv:Server=127.0.0.1,1433;Database=master;Encrypt=no;LoginTimeout=5
       SISP_TEST_SQLSRV_USER: sa
       SISP_TEST_SQLSRV_PASSWORD: SispSqlServer!2026
     steps:
@@ -170,7 +170,7 @@ jobs:
             fi
             sleep 2
           done
-          php -r 'new PDO(getenv("SISP_TEST_SQLSRV_ADMIN_DSN"), getenv("SISP_TEST_SQLSRV_USER"), getenv("SISP_TEST_SQLSRV_PASSWORD"));'
+          php -r 'try { new PDO(getenv("SISP_TEST_SQLSRV_ADMIN_DSN"), getenv("SISP_TEST_SQLSRV_USER"), getenv("SISP_TEST_SQLSRV_PASSWORD")); } catch (Throwable $exception) { fwrite(STDERR, $exception->getMessage() . PHP_EOL); exit(1); }'
           php -r '$pdo = new PDO(getenv("SISP_TEST_SQLSRV_ADMIN_DSN"), getenv("SISP_TEST_SQLSRV_USER"), getenv("SISP_TEST_SQLSRV_PASSWORD")); if ((int) $pdo->query("SELECT DB_ID(NCHAR(115) + NCHAR(105) + NCHAR(115) + NCHAR(112))")->fetchColumn() === 0) { $pdo->exec("CREATE DATABASE [sisp]"); }'
       - name: Diagnosticar contentor SQL Server
         if: failure()
