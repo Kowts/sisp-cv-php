@@ -134,6 +134,7 @@ jobs:
         ports:
           - 1433:1433
     env:
+      fail-fast: true
       SISP_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=3306;dbname=sisp
       SISP_TEST_MYSQL_USER: root
       SISP_TEST_MYSQL_PASSWORD: root
@@ -149,9 +150,13 @@ jobs:
       - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
         with:
           php-version: '8.3'
-          extensions: json, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, pdo_sqlsrv, sqlite3
+          extensions: json, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, sqlsrv, pdo_sqlsrv, sqlite3
           coverage: none
       - run: composer install --no-interaction --prefer-dist
+      - name: Confirmar driver PDO SQL Server
+        run: |
+          php --ri pdo_sqlsrv
+          php -r 'if (!in_array("sqlsrv", PDO::getAvailableDrivers(), true)) { fwrite(STDERR, "O driver pdo_sqlsrv não foi carregado." . PHP_EOL); exit(1); }'
       - name: Aguardar e preparar SQL Server
         shell: bash
         run: |
