@@ -141,8 +141,8 @@ jobs:
       SISP_TEST_PGSQL_DSN: pgsql:host=127.0.0.1;port=5432;dbname=sisp
       SISP_TEST_PGSQL_USER: postgres
       SISP_TEST_PGSQL_PASSWORD: root
-      SISP_TEST_SQLSRV_DSN: sqlsrv:Server=127.0.0.1,1433;Database=sisp;TrustServerCertificate=1
-      SISP_TEST_SQLSRV_ADMIN_DSN: sqlsrv:Server=127.0.0.1,1433;Database=master;TrustServerCertificate=1
+      SISP_TEST_SQLSRV_DSN: sqlsrv:Server=127.0.0.1,1433;Database=sisp;LoginTimeout=5;TrustServerCertificate=1
+      SISP_TEST_SQLSRV_ADMIN_DSN: sqlsrv:Server=127.0.0.1,1433;Database=master;LoginTimeout=5;TrustServerCertificate=1
       SISP_TEST_SQLSRV_USER: sa
       SISP_TEST_SQLSRV_PASSWORD: SispSqlServer!2026
     steps:
@@ -160,14 +160,21 @@ jobs:
       - name: Aguardar e preparar SQL Server
         shell: bash
         run: |
-          for attempt in {1..30}; do
-            if php -r 'try { new PDO(getenv("SISP_TEST_SQLSRV_ADMIN_DSN"), getenv("SISP_TEST_SQLSRV_USER"), getenv("SISP_TEST_SQLSRV_PASSWORD")); } catch (Throwable $exception) { fwrite(STDERR, $exception->getMessage()); exit(1); }'; then
+          for attempt in {1..60}; do
+            if timeout 1 bash -c '</dev/tcp/127.0.0.1/1433'; then
               break
             fi
-            if [ "$attempt" -eq 30 ]; then
+            if [ "$attempt" -eq 60 ]; then
+              echo 'SQL Server não abriu a porta 1433 a tempo.' >&2
               exit 1
             fi
             sleep 2
           done
+          php -r 'new PDO(getenv("SISP_TEST_SQLSRV_ADMIN_DSN"), getenv("SISP_TEST_SQLSRV_USER"), getenv("SISP_TEST_SQLSRV_PASSWORD"));'
           php -r '$pdo = new PDO(getenv("SISP_TEST_SQLSRV_ADMIN_DSN"), getenv("SISP_TEST_SQLSRV_USER"), getenv("SISP_TEST_SQLSRV_PASSWORD")); if ((int) $pdo->query("SELECT DB_ID(NCHAR(115) + NCHAR(105) + NCHAR(115) + NCHAR(112))")->fetchColumn() === 0) { $pdo->exec("CREATE DATABASE [sisp]"); }'
+      - name: Diagnosticar contentor SQL Server
+        if: failure()
+        run: |
+          docker ps -a
+          docker logs ${{ job.services.sqlserver.id }} || true
       - run: php vendor/bin/phpunit tests/PdoStorageTest.php tests/PdoDriverIntegrationTest.php
