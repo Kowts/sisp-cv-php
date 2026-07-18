@@ -5,7 +5,8 @@
 - confirme contrato, POS ID, credenciais, moedas e URLs com o adquirente;
 - configure `SISP_POS_ID`, `SISP_POS_AUT_CODE`, `SISP_URL` e
   `SISP_CALLBACK_URL` no ambiente seguro;
-- instale o driver PDO correcto e execute as migrações no motor de produção;
+- defina `SISP_AUTO_MIGRATE=false`, instale o driver PDO correcto e execute as
+  migrações no motor de produção antes de expor o checkout;
 - use HTTPS público no callback e teste DNS, firewall, TLS e redireccionamentos;
 - valide criação, redireccionamento, callback válido, callback repetido, falha
   de pagamento e transação pendente no ambiente de testes do fornecedor;
@@ -17,6 +18,10 @@ Monitorize taxa de callbacks inválidos, transações pendentes, falhas de PDO e
 diferenças entre encomendas e transações. Registe referências e estados, não
 dados de cartão. Trate indisponibilidade do gateway como `pending` até existir
 confirmação oficial.
+
+Os dados persistidos pelo core são redigidos. Não reintroduza tokens, payloads
+3DS, PAN, recibos ou mensagens detalhadas em tabelas de auditoria, plataformas
+de observabilidade ou ferramentas de erro.
 
 ## Recuperação
 

@@ -112,8 +112,14 @@ final class Sisp
     {
         $endpoint = trim($this->credentials->url);
 
-        if ($endpoint === '') {
-            throw new InvalidArgumentException('SISP payment URL is required to render the payment form.');
+        $scheme = parse_url($endpoint, PHP_URL_SCHEME);
+        if (
+            $endpoint === ''
+            || filter_var($endpoint, FILTER_VALIDATE_URL) === false
+            || ! is_string($scheme)
+            || ! in_array(strtolower($scheme), ['http', 'https'], true)
+        ) {
+            throw new InvalidArgumentException('SISP payment URL must use HTTP or HTTPS.');
         }
 
         $query = http_build_query([

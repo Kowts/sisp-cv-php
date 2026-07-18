@@ -14,6 +14,7 @@ final class PdoPaymentIntentStore implements PaymentIntentStore
     public function __construct(PDO $pdo, bool $autoMigrate = true)
     {
         $this->pdo = $pdo;
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         if ($autoMigrate) {
             SispSchema::migrate($this->pdo);

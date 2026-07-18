@@ -24,10 +24,10 @@ jobs:
 
     steps:
       - name: Obter código
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
       - name: Configurar PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
         with:
           php-version: ${{ matrix.php }}
           extensions: json, pdo, pdo_sqlite, sqlite3
@@ -45,8 +45,8 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: shivammathur/setup-php@v2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
         with:
           php-version: '8.2'
           extensions: json, pdo, pdo_sqlite, sqlite3
@@ -59,7 +59,7 @@ jobs:
       - name: Cobertura mínima
         run: |
           composer coverage
-          php tools/check-coverage.php build/coverage.xml 50
+          php tools/check-coverage.php build/coverage.xml 60
       - name: Auditoria de dependências
         run: composer audit
 
@@ -76,8 +76,8 @@ jobs:
             composer_update_flags: ''
             label: dependências recentes
     steps:
-      - uses: actions/checkout@v7
-      - uses: shivammathur/setup-php@v2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
         with:
           php-version: ${{ matrix.php }}
           extensions: json, pdo, pdo_sqlite, sqlite3
@@ -90,8 +90,8 @@ jobs:
   yii2:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: shivammathur/setup-php@v2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
         with:
           php-version: '8.2'
           extensions: json, pdo
@@ -134,8 +134,8 @@ jobs:
       SISP_TEST_PGSQL_USER: postgres
       SISP_TEST_PGSQL_PASSWORD: root
     steps:
-      - uses: actions/checkout@v7
-      - uses: shivammathur/setup-php@v2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
         with:
           php-version: '8.3'
           extensions: json, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, sqlite3

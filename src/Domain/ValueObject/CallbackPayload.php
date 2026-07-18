@@ -143,6 +143,33 @@ final class CallbackPayload
         ];
     }
 
+    /**
+     * Campos técnicos permitidos no histórico da transacção. Exclui a
+     * assinatura, PAN, recibo e mensagem de erro devolvida pelo gateway.
+     *
+     * @return array<string,float|int|string>
+     */
+    public function toSafeStorageFields(): array
+    {
+        return [
+            'merchantRespMerchantRef' => $this->merchantRef,
+            'merchantRespMerchantSession' => $this->merchantSession,
+            'merchantRespTimeStamp' => $this->timeStamp,
+            'merchantRespPurchaseAmount' => $this->amount,
+            'currency' => $this->currency,
+            'transactionCode' => $this->transactionCode,
+            'merchantRespTid' => $this->transactionID,
+            'messageType' => $this->messageType,
+            'merchantResp' => $this->merchantResponse,
+            'merchantRespCP' => $this->merchantRespCp,
+            'posID' => $this->posID,
+            'merchantRespMessageID' => $this->messageID,
+            'merchantRespReferenceNumber' => $this->reference,
+            'merchantRespEntityCode' => $this->entityCode,
+            'reloadCode' => $this->reloadCode,
+        ];
+    }
+
     private function maskedPan(): string
     {
         return $this->pan === '' ? '' : '***redacted***';

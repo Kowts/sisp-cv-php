@@ -12,5 +12,5 @@ return [
     'fingerprintVersion' => $_ENV['SISP_FINGERPRINT_VERSION'] ?? '1',
     'is3DSec' => $_ENV['SISP_3DS'] ?? '0',
     'transactionCode' => $_ENV['SISP_TRANSACTION_CODE'] ?? '1',
-    'autoMigrate' => true,
+    'autoMigrate' => filter_var($_ENV['SISP_AUTO_MIGRATE'] ?? false, FILTER_VALIDATE_BOOL),
 ];

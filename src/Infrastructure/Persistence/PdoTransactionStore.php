@@ -18,6 +18,7 @@ final class PdoTransactionStore implements TransactionStore
     public function __construct(PDO $pdo, bool $autoMigrate = true)
     {
         $this->pdo = $pdo;
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         if ($autoMigrate) {
             SispSchema::migrate($this->pdo);
@@ -27,7 +28,7 @@ final class PdoTransactionStore implements TransactionStore
     public function storePaymentRequest(PaymentRequest $request): TransactionRecord
     {
         $now = gmdate('c');
-        $payload = json_encode($request->toFormFields(), JSON_UNESCAPED_SLASHES);
+        $payload = $this->encodePayload($request->toSafeStorageFields());
 
         $this->pdo->beginTransaction();
 
@@ -103,9 +104,9 @@ final class PdoTransactionStore implements TransactionStore
         string $status
     ): TransactionRecord {
         $now = gmdate('c');
-        $encoded = json_encode(
-            array_merge($transaction->payload, ['callback' => $payload->toFormFields()]),
-            JSON_UNESCAPED_SLASHES
+        $callbackPayload = $payload->toSafeStorageFields();
+        $encoded = $this->encodePayload(
+            array_merge($transaction->payload, ['callback' => $callbackPayload])
         );
 
         $this->pdo->beginTransaction();
@@ -114,7 +115,7 @@ final class PdoTransactionStore implements TransactionStore
             $statement = $this->pdo->prepare(
                 'UPDATE sisp_transactions SET status = :status, '
                 . 'gateway_transaction_id = :gateway_transaction_id, payload = :payload, '
-                . 'updated_at = :updated_at WHERE id = :id'
+                . 'updated_at = :updated_at WHERE id = :id AND status = :pending_status'
             );
             $statement->execute([
                 'status' => $status,
@@ -122,7 +123,14 @@ final class PdoTransactionStore implements TransactionStore
                 'payload' => $encoded,
                 'updated_at' => $now,
                 'id' => $transaction->id,
+                'pending_status' => TransactionStatus::PENDING,
             ]);
+
+            if ($statement->rowCount() !== 1) {
+                $this->pdo->rollBack();
+
+                return $this->findById($transaction->id);
+            }
 
             $attempt = $this->pdo->prepare(
                 'UPDATE sisp_transaction_attempts SET status = :status, '
@@ -134,7 +142,7 @@ final class PdoTransactionStore implements TransactionStore
             $attempt->execute([
                 'status' => $status,
                 'gateway_transaction_id' => (string) $payload->transactionID,
-                'payload' => json_encode($payload->toFormFields(), JSON_UNESCAPED_SLASHES),
+                'payload' => $this->encodePayload($callbackPayload),
                 'updated_at' => $now,
                 'transaction_id' => $transaction->id,
                 'merchant_ref' => $transaction->merchantRef,
@@ -183,6 +191,14 @@ final class PdoTransactionStore implements TransactionStore
     private function driverName(): string
     {
         return (string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+    }
+
+    /**
+     * @param array<string,mixed> $payload
+     */
+    private function encodePayload(array $payload): string
+    {
+        return json_encode($payload, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
     }
 
     /**

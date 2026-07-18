@@ -17,6 +17,7 @@ final class BuildPurchaseRequest
     {
         $now = $now ?: new DateTimeImmutable();
         $date = $now->format('Ymd');
+        $country = CountryCodeMapper::toNumeric((string) ($customer['country'] ?? 'CV'));
 
         $payload = [
             'acctID' => 'x',
@@ -31,21 +32,21 @@ final class BuildPurchaseRequest
             'email' => (string) ($customer['email'] ?? ''),
             'addrMatch' => 'N',
             'billAddrCity' => (string) ($customer['city'] ?? ''),
-            'billAddrCountry' => CountryCodeMapper::toNumeric((string) ($customer['country'] ?? 'CV')),
+            'billAddrCountry' => $country,
             'billAddrLine1' => (string) ($customer['address'] ?? ''),
             'billAddrLine2' => '',
             'billAddrLine3' => '',
             'billAddrPostCode' => (string) ($customer['postalCode'] ?? ''),
             'billAddrState' => '',
-            'shipAddrCity' => 'City',
-            'shipAddrCountry' => '132',
-            'shipAddrLine1' => '000',
-            'shipAddrPostCode' => '000',
+            'shipAddrCity' => (string) ($customer['city'] ?? ''),
+            'shipAddrCountry' => $country,
+            'shipAddrLine1' => (string) ($customer['address'] ?? ''),
+            'shipAddrPostCode' => (string) ($customer['postalCode'] ?? ''),
             'shipAddrState' => '',
             'workPhone' => ['cc' => '238', 'subscriber' => '0000000'],
             'mobilePhone' => ['cc' => '238', 'subscriber' => $customer['phone'] ?? '0000000'],
         ];
 
-        return base64_encode((string) json_encode($payload, JSON_UNESCAPED_SLASHES));
+        return base64_encode((string) json_encode($payload, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));
     }
 }

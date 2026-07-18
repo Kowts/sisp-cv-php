@@ -79,4 +79,27 @@ final class PaymentRequest
 
         return $fields;
     }
+
+    /**
+     * Representação mínima para persistência interna. Tokens, fingerprints e
+     * dados 3DS pertencem ao pedido enviado ao gateway, não ao histórico local.
+     *
+     * @return array<string,float|int|string>
+     */
+    public function toSafeStorageFields(): array
+    {
+        return [
+            'posID' => $this->posID,
+            'merchantRef' => $this->merchantRef,
+            'merchantSession' => $this->merchantSession,
+            'amount' => $this->amount,
+            'currency' => $this->currency,
+            'is3DSec' => $this->is3DSec,
+            'timeStamp' => $this->timeStamp,
+            'transactionCode' => $this->transactionCode,
+            'entityCode' => $this->entityCode,
+            'referenceNumber' => $this->referenceNumber,
+            'locale' => $this->locale,
+        ];
+    }
 }

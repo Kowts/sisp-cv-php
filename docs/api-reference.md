@@ -433,6 +433,14 @@ public function toFormFields(): array
 public function toSafeLogContext(): array
 ```
 
+#### `toSafeStorageFields()`
+
+```php
+public function toSafeStorageFields(): array
+```
+
+Campos técnicos permitidos no histórico da transacção. Exclui a assinatura, PAN, recibo e mensagem de erro devolvida pelo gateway.
+
 
 ## `Kowts\Sisp\Domain\ValueObject\PaymentRequest`
 
@@ -452,6 +460,14 @@ public function __construct(array $data)
 ```php
 public function toFormFields(): array
 ```
+
+#### `toSafeStorageFields()`
+
+```php
+public function toSafeStorageFields(): array
+```
+
+Representação mínima para persistência interna. Tokens, fingerprints e dados 3DS pertencem ao pedido enviado ao gateway, não ao histórico local.
 
 
 ## `Kowts\Sisp\Domain\ValueObject\SispCredentials`

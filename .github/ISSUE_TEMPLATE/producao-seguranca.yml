@@ -12,7 +12,7 @@ body:
   - type: dropdown
     id: area
     attributes:
-        label: Área
+      label: Área
       options:
         - Configuração de produção
         - Logs / auditoria

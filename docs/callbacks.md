@@ -35,6 +35,11 @@ PAN, recibos, erros detalhados, e qualquer dado pessoal que não seja necessári
 para operar a transação. O payload completo não deve ser exposto em logs de
 aplicação, ferramentas de erro ou issues.
 
+`CallbackPayload::toFormFields()` existe para interoperabilidade e validação do
+protocolo; não é um formato de arquivo. O armazenamento PDO usa internamente
+`toSafeStorageFields()` e elimina assinatura, PAN, recibo e mensagem detalhada
+antes de persistir a notificação.
+
 ## Falhas de validação
 
 Para fingerprints inválidos, responda com `400`, não altere a encomenda e registe

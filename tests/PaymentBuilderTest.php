@@ -49,4 +49,41 @@ final class PaymentBuilderTest extends TestCase
             ->merchantSession('S1')
             ->build();
     }
+
+    public function testRejectsCallbackUrlWithUnsupportedScheme(): void
+    {
+        $sisp = SispFactory::create(SispConfig::fromArray([
+            'posId' => '90051',
+            'posAutCode' => 'secret',
+            'url' => 'https://gateway.example/pay',
+            'urlMerchantResponse' => 'ftp://app.example/callback',
+        ]));
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $sisp->payment()
+            ->amount('1500')
+            ->merchantRef('R1')
+            ->merchantSession('S1')
+            ->build();
+    }
+
+    public function testRejectsGatewayUrlWithUnsupportedScheme(): void
+    {
+        $sisp = SispFactory::create(SispConfig::fromArray([
+            'posId' => '90051',
+            'posAutCode' => 'secret',
+            'url' => 'javascript:alert(1)',
+            'urlMerchantResponse' => 'https://app.example/callback',
+        ]));
+        $request = $sisp->payment()
+            ->amount('1500')
+            ->merchantRef('R1')
+            ->merchantSession('S1')
+            ->build();
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $sisp->gatewayFormAction($request);
+    }
 }

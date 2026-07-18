@@ -27,7 +27,7 @@ final class InMemoryTransactionStore implements TransactionStore
             $request->transactionCode,
             TransactionStatus::PENDING,
             null,
-            $request->toFormFields()
+            $request->toSafeStorageFields()
         );
 
         $this->transactions[$transaction->id] = $transaction;
@@ -51,6 +51,10 @@ final class InMemoryTransactionStore implements TransactionStore
         CallbackPayload $payload,
         string $status
     ): TransactionRecord {
+        if ($transaction->status !== TransactionStatus::PENDING) {
+            return $transaction;
+        }
+
         $updated = new TransactionRecord(
             $transaction->id,
             $transaction->merchantRef,
@@ -60,7 +64,7 @@ final class InMemoryTransactionStore implements TransactionStore
             $transaction->transactionCode,
             $status,
             (string) $payload->transactionID,
-            array_merge($transaction->payload, ['callback' => $payload->toFormFields()])
+            array_merge($transaction->payload, ['callback' => $payload->toSafeStorageFields()])
         );
 
         $this->transactions[$updated->id] = $updated;

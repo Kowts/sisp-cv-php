@@ -9,6 +9,10 @@ o projecto adopta [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ### Segurança
 
+- Persistência PDO redigida para remover tokens, fingerprints, dados 3DS, PAN,
+  recibos e mensagens detalhadas antes de escrever na base de dados.
+- Stores PDO passam a falhar explicitamente em erros de base de dados e evitam
+  que callbacks atrasados substituam uma transação já finalizada.
 - Validação reforçada para pedidos de pagamento e correspondência estrita de callbacks com a transacção original.
 - Callbacks repetidos já não fazem regredir transacções em estado final; foi adicionado um contexto de registo que omite dados sensíveis.
 

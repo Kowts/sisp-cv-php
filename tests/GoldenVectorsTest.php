@@ -97,5 +97,8 @@ final class GoldenVectorsTest extends TestCase
         self::assertSame('***redacted***', $payload->toSafeLogContext()['pan']);
         self::assertArrayNotHasKey('fingerprint', $payload->toSafeLogContext());
         self::assertArrayNotHasKey('clientReceipt', $payload->toSafeLogContext());
+        self::assertArrayNotHasKey('resultFingerPrint', $payload->toSafeStorageFields());
+        self::assertArrayNotHasKey('merchantRespPan', $payload->toSafeStorageFields());
+        self::assertArrayNotHasKey('merchantRespClientReceipt', $payload->toSafeStorageFields());
     }
 }

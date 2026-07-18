@@ -21,6 +21,13 @@ Nunca registe ou publique PAN completo, CVV, PIN, credenciais, tokens, recibos
 reais ou dados pessoais desnecessários. Use referências fictícias, e-mails de
 teste e valores anonimizados em exemplos, testes e tickets.
 
+O `PdoTransactionStore` guarda apenas os campos técnicos necessários para
+localizar e acompanhar a transação. Remove tokens, fingerprints, payloads 3DS,
+PAN, recibos e mensagens detalhadas do callback antes de os escrever em PDO.
+Se a aplicação tiver uma obrigação contratual de conservar informação adicional,
+faça-o fora do core, com uma finalidade documentada, controlo de acesso e prazo
+de retenção explícito.
+
 ## Superfície HTTP
 
 - use HTTPS no gateway, callback e páginas de resultado;

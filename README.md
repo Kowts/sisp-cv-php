@@ -3,7 +3,7 @@
 # SISP CV para PHP
 
 [![Testes](https://github.com/Kowts/sisp-cv-php/actions/workflows/ci.yml/badge.svg)](https://github.com/Kowts/sisp-cv-php/actions/workflows/ci.yml)
-[![Cobertura](https://img.shields.io/badge/cobertura-%E2%89%A550%25-brightgreen.svg)](https://github.com/Kowts/sisp-cv-php/actions/workflows/ci.yml)
+[![Cobertura](https://img.shields.io/badge/cobertura-%E2%89%A560%25-brightgreen.svg)](https://github.com/Kowts/sisp-cv-php/actions/workflows/ci.yml)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%208-4e9a06.svg)](phpstan.neon.dist)
 [![Packagist](https://img.shields.io/packagist/v/kowts/sisp-cv.svg)](https://packagist.org/packages/kowts/sisp-cv)
 [![PHP](https://img.shields.io/badge/PHP-%5E8.1-777BB4.svg)](https://www.php.net/)
@@ -116,6 +116,11 @@ $sisp = SispFactory::create(SispConfig::fromArray([
 O guia de [Persistência PDO](docs/persistencia-pdo.md) descreve o esquema,
 migrações controladas pela aplicação e as diferenças entre motores.
 
+O ficheiro [`.env.example`](.env.example) enumera as variáveis de ambiente. Em
+produção mantenha `SISP_AUTO_MIGRATE=false`, execute `bin/sisp migrate` numa
+etapa de deploy controlada e atribua à aplicação apenas permissões de leitura e
+escrita nas tabelas SISP.
+
 ## Frameworks e CLI
 
 - [Laravel](docs/laravel.md): `Kowts\Sisp\Sisp` resolvido pelo contentor.
@@ -130,6 +135,10 @@ Nunca envie `posAutCode`, tokens, PAN completo, CVV, PIN, recibos reais ou
 dados pessoais para o browser, repositório, issues ou logs. Use HTTPS no
 gateway e callback, mantenha segredos no gestor de configuração da aplicação e
 trate callbacks inválidos como tentativas não confiáveis.
+
+O armazenamento PDO do pacote conserva apenas metadados técnicos redigidos. O
+pedido completo é enviado ao gateway, mas tokens, fingerprints, payload 3DS,
+PAN, recibos e mensagens detalhadas de erro não são guardados pelo core.
 
 Leia [Segurança](docs/seguranca.md), [Guia de produção](docs/guia-producao.md)
 e a política em [SECURITY.md](SECURITY.md).
@@ -152,6 +161,11 @@ composer check
 
 O CI valida PHP 8.1 a 8.4, Windows e Linux, dependências mínimas e recentes,
 Yii2 e persistência SQLite, MySQL e PostgreSQL.
+
+Não existe `Dockerfile` nem `docker-compose` próprios porque este repositório é
+uma biblioteca, não uma aplicação executável. Use o processo de containerização
+da aplicação consumidora e mantenha a imagem PHP, o servidor HTTP e as
+credenciais fora deste pacote.
 
 ## Licença
 

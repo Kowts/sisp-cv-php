@@ -83,9 +83,18 @@ final class BuildPaymentRequest
             throw new InvalidArgumentException('Unsupported SISP transaction code.');
         }
 
-        if (filter_var((string) $request['urlMerchantResponse'], FILTER_VALIDATE_URL) === false) {
-            throw new InvalidArgumentException('SISP callback URL must be a valid absolute URL.');
+        if (! $this->isHttpUrl((string) $request['urlMerchantResponse'])) {
+            throw new InvalidArgumentException('SISP callback URL must use HTTP or HTTPS.');
         }
+    }
+
+    private function isHttpUrl(string $url): bool
+    {
+        $scheme = parse_url($url, PHP_URL_SCHEME);
+
+        return filter_var($url, FILTER_VALIDATE_URL) !== false
+            && is_string($scheme)
+            && in_array(strtolower($scheme), ['http', 'https'], true);
     }
 
     /**
