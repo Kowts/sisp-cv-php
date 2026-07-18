@@ -25,8 +25,8 @@ final class PdoPaymentIntentStore implements PaymentIntentStore
     {
         $now = gmdate('c');
         $statement = $this->pdo->prepare(
-            'INSERT INTO sisp_payment_intents (intent_key, status, created_at, updated_at)
-             VALUES (:intent_key, :status, :created_at, :updated_at)'
+            'INSERT INTO sisp_payment_intents (intent_key, status, created_at, updated_at) '
+            . 'VALUES (:intent_key, :status, :created_at, :updated_at)'
         );
         $statement->execute([
             'intent_key' => $key,
@@ -52,10 +52,19 @@ final class PdoPaymentIntentStore implements PaymentIntentStore
 
     public function find(string $key): ?array
     {
-        $statement = $this->pdo->prepare('SELECT * FROM sisp_payment_intents WHERE intent_key = :intent_key LIMIT 1');
+        $statement = $this->pdo->prepare(
+            $this->driverName() === 'sqlsrv'
+                ? 'SELECT TOP 1 * FROM sisp_payment_intents WHERE intent_key = :intent_key'
+                : 'SELECT * FROM sisp_payment_intents WHERE intent_key = :intent_key LIMIT 1'
+        );
         $statement->execute(['intent_key' => $key]);
         $row = $statement->fetch(PDO::FETCH_ASSOC);
 
         return $row ?: null;
+    }
+
+    private function driverName(): string
+    {
+        return (string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
     }
 }

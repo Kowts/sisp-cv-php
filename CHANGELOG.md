@@ -18,6 +18,8 @@ o projecto adopta [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ### Alterado
 
+- Persistência PDO alargada a SQL Server através de `pdo_sqlsrv`, com esquema,
+  criação de identificadores e consultas compatíveis, além de integração no CI.
 - Documentação pública, operacional e de integração expandida para PHP puro,
   persistência PDO, callbacks, idempotência, segurança e frameworks.
 

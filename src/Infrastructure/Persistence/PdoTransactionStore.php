@@ -33,18 +33,7 @@ final class PdoTransactionStore implements TransactionStore
         $this->pdo->beginTransaction();
 
         try {
-            $sql =
-                'INSERT INTO sisp_transactions '
-                . '(merchant_ref, merchant_session, amount, currency, transaction_code, status, payload, '
-                . 'created_at, updated_at) '
-                . 'VALUES (:merchant_ref, :merchant_session, :amount, :currency, :transaction_code, :status, '
-                . ':payload, :created_at, :updated_at)';
-
-            if ($this->driverName() === 'pgsql') {
-                $sql .= ' RETURNING id';
-            }
-
-            $statement = $this->pdo->prepare($sql);
+            $statement = $this->pdo->prepare($this->insertTransactionSql());
             $statement->execute([
                 'merchant_ref' => $request->merchantRef,
                 'merchant_session' => $request->merchantSession,
@@ -89,8 +78,9 @@ final class PdoTransactionStore implements TransactionStore
     public function findByMerchantIdentifiers(string $merchantRef, string $merchantSession): ?TransactionRecord
     {
         $statement = $this->pdo->prepare(
-            'SELECT * FROM sisp_transactions '
-            . 'WHERE merchant_ref = :merchant_ref AND merchant_session = :merchant_session LIMIT 1'
+            $this->selectOnePrefix() . ' FROM sisp_transactions '
+            . 'WHERE merchant_ref = :merchant_ref AND merchant_session = :merchant_session'
+            . $this->selectOneSuffix()
         );
         $statement->execute(['merchant_ref' => $merchantRef, 'merchant_session' => $merchantSession]);
         $row = $statement->fetch(PDO::FETCH_ASSOC);
@@ -173,19 +163,45 @@ final class PdoTransactionStore implements TransactionStore
         return $this->recordFromRow($row);
     }
 
+    private function insertTransactionSql(): string
+    {
+        $columns = '(merchant_ref, merchant_session, amount, currency, transaction_code, status, payload, '
+            . 'created_at, updated_at)';
+        $values = 'VALUES (:merchant_ref, :merchant_session, :amount, :currency, :transaction_code, :status, '
+            . ':payload, :created_at, :updated_at)';
+
+        if ($this->driverName() === 'sqlsrv') {
+            return 'INSERT INTO sisp_transactions ' . $columns . ' OUTPUT INSERTED.id ' . $values;
+        }
+
+        $sql = 'INSERT INTO sisp_transactions ' . $columns . ' ' . $values;
+
+        return $this->driverName() === 'pgsql' ? $sql . ' RETURNING id' : $sql;
+    }
+
     private function insertedTransactionId(\PDOStatement $statement): int
     {
-        if ($this->driverName() === 'pgsql') {
+        if (in_array($this->driverName(), ['pgsql', 'sqlsrv'], true)) {
             $id = $statement->fetchColumn();
 
             if ($id === false) {
-                throw new \RuntimeException('PostgreSQL não devolveu o ID da transação SISP criada.');
+                throw new \RuntimeException('O driver PDO não devolveu o ID da transação SISP criada.');
             }
 
             return (int) $id;
         }
 
         return (int) $this->pdo->lastInsertId();
+    }
+
+    private function selectOnePrefix(): string
+    {
+        return $this->driverName() === 'sqlsrv' ? 'SELECT TOP 1 *' : 'SELECT *';
+    }
+
+    private function selectOneSuffix(): string
+    {
+        return $this->driverName() === 'sqlsrv' ? '' : ' LIMIT 1';
     }
 
     private function driverName(): string

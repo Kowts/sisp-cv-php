@@ -13,7 +13,7 @@
 
 Biblioteca PHP independente de frameworks para criar pedidos de pagamento
 SISP/Vinti4, gerar fingerprints, validar callbacks e manter o ciclo de vida
-local da transação em SQLite, MySQL/MariaDB ou PostgreSQL.
+local da transação em SQLite, MySQL/MariaDB, PostgreSQL ou SQL Server.
 
 > [!IMPORTANT]
 > Este projecto não é oficial da SISP, da Vinti4, de bancos adquirentes nem de
@@ -39,8 +39,9 @@ configurado pela aplicação.
 
 - PHP 8.1 ou superior;
 - extensões `json` e `pdo`;
-- um driver PDO quando existir persistência: `pdo_sqlite`, `pdo_mysql` ou
-  `pdo_pgsql`;
+- um driver PDO quando existir persistência: `pdo_sqlite`, `pdo_mysql`,
+  `pdo_pgsql` ou `pdo_sqlsrv`. Para SQL Server, instale também o Microsoft ODBC
+  Driver compatível com a versão de PHP;
 - credenciais SISP/Vinti4 válidas, fora do código e do repositório.
 
 ## Instalação
@@ -94,7 +95,7 @@ Consulte [Pagamentos](docs/pagamentos.md), [Callbacks](docs/callbacks.md) e
 ## Persistência PDO
 
 Passe uma ligação PDO para ativar a persistência automática. O esquema suporta
-SQLite, MySQL/MariaDB e PostgreSQL.
+SQLite, MySQL/MariaDB, PostgreSQL e SQL Server.
 
 ```php
 $pdo = new PDO(
@@ -160,7 +161,7 @@ composer check
 ```
 
 O CI valida PHP 8.1 a 8.4, Windows e Linux, dependências mínimas e recentes,
-Yii2 e persistência SQLite, MySQL e PostgreSQL.
+Yii2 e persistência SQLite, MySQL, PostgreSQL e SQL Server.
 
 Não existe `Dockerfile` nem `docker-compose` próprios porque este repositório é
 uma biblioteca, não uma aplicação executável. Use o processo de containerização

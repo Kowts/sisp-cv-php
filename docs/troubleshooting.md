@@ -23,7 +23,7 @@ CSP da página, que pode bloquear o script de submissão.
 
 ## PDO não cria tabelas
 
-Confirme que o DSN usa `sqlite`, `mysql` ou `pgsql`, que a extensão PDO do motor
+Confirme que o DSN usa `sqlite`, `mysql`, `pgsql` ou `sqlsrv`, que a extensão PDO do motor
 está instalada e que o utilizador de base de dados tem permissão para criar as
 tabelas. Em ambientes controlados, execute migrações manualmente e defina
 `autoMigrate` como `false`.

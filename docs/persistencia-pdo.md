@@ -17,10 +17,18 @@ parcialmente persistida sem aviso.
 | SQLite | `sqlite:/var/app/sisp.sqlite` | `pdo_sqlite` |
 | MySQL/MariaDB | `mysql:host=127.0.0.1;dbname=sisp;charset=utf8mb4` | `pdo_mysql` |
 | PostgreSQL | `pgsql:host=127.0.0.1;port=5432;dbname=sisp` | `pdo_pgsql` |
+| SQL Server | `sqlsrv:Server=sqlserver.example,1433;Database=sisp;Encrypt=yes;TrustServerCertificate=no` | `pdo_sqlsrv` |
 
 O esquema escolhe a coluna de chave primária de acordo com o driver. No
-PostgreSQL, a criação de transação usa `RETURNING id`; em SQLite e MySQL/MariaDB
-usa o identificador devolvido pelo PDO.
+PostgreSQL, a criação de transação usa `RETURNING id`; no SQL Server usa
+`OUTPUT INSERTED.id`; em SQLite e MySQL/MariaDB usa o identificador devolvido
+pelo PDO. No SQL Server, o esquema usa `IDENTITY`, `VARCHAR(MAX)` para payloads
+e `OBJECT_ID` para criar tabelas sem as recriar.
+
+Para SQL Server, instale a extensão `pdo_sqlsrv` e o Microsoft ODBC Driver para
+SQL Server na mesma máquina que executa PHP. O DSN acima exige um certificado
+confiado pelo sistema; `TrustServerCertificate=1` deve ficar limitado a
+desenvolvimento e a testes com certificados autoassinados.
 
 ## Tabelas
 
@@ -50,7 +58,8 @@ foreach (SispSchema::statements($driver) as $statement) {
 
 Depois configure `autoMigrate` como `false`. Execute a migração com uma conta de
 base de dados de privilégio limitado e teste-a no mesmo motor e versão usados em
-produção.
+produção. A conta da aplicação precisa apenas de acesso de leitura e escrita às
+tabelas SISP; reserve `CREATE TABLE` para a conta de migração.
 
 ## Concorrência e cópias de segurança
 

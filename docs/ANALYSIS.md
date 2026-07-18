@@ -13,8 +13,8 @@ e Yii2 e reduz o risco de divergência entre integrações.
 
 Uma integração simples pode criar pedidos sem armazenamento. Em produção, a
 persistência é recomendada para associar callbacks, tentativas e idempotência a
-uma encomenda local. O suporte PDO é validado em SQLite, MySQL/MariaDB e
-PostgreSQL.
+uma encomenda local. O suporte PDO é validado em SQLite, MySQL/MariaDB,
+PostgreSQL e SQL Server.
 
 ## Bridges finas
 

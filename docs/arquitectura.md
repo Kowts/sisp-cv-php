@@ -35,9 +35,9 @@ framework para `SispConfig` e registam `Kowts\Sisp\Sisp` no container.
 - fingerprints e montantes ficam no core para terem o mesmo comportamento em
   PHP puro e em frameworks;
 - persistência é opcional, mas recomendada em produção;
-- `SispSchema` escolhe SQL para SQLite, MySQL/MariaDB e PostgreSQL a partir do
+- `SispSchema` escolhe SQL para SQLite, MySQL/MariaDB, PostgreSQL e SQL Server a partir do
   driver PDO;
-- os três motores são validados no CI: SQLite em memória, MySQL e PostgreSQL
+- os quatro motores são validados no CI: SQLite em memória, MySQL, PostgreSQL e SQL Server
   em serviços efémeros.
 
 ## Limites de responsabilidade

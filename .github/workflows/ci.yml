@@ -126,6 +126,13 @@ jobs:
         options: >-
           --health-cmd="pg_isready --username=postgres --dbname=sisp"
           --health-interval=10s --health-timeout=5s --health-retries=10
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: 'Y'
+          MSSQL_SA_PASSWORD: SispSqlServer!2026
+        ports:
+          - 1433:1433
     env:
       SISP_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=3306;dbname=sisp
       SISP_TEST_MYSQL_USER: root
@@ -133,12 +140,29 @@ jobs:
       SISP_TEST_PGSQL_DSN: pgsql:host=127.0.0.1;port=5432;dbname=sisp
       SISP_TEST_PGSQL_USER: postgres
       SISP_TEST_PGSQL_PASSWORD: root
+      SISP_TEST_SQLSRV_DSN: sqlsrv:Server=127.0.0.1,1433;Database=sisp;TrustServerCertificate=1
+      SISP_TEST_SQLSRV_ADMIN_DSN: sqlsrv:Server=127.0.0.1,1433;Database=master;TrustServerCertificate=1
+      SISP_TEST_SQLSRV_USER: sa
+      SISP_TEST_SQLSRV_PASSWORD: SispSqlServer!2026
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
         with:
           php-version: '8.3'
-          extensions: json, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, sqlite3
+          extensions: json, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, pdo_sqlsrv, sqlite3
           coverage: none
       - run: composer install --no-interaction --prefer-dist
+      - name: Aguardar e preparar SQL Server
+        shell: bash
+        run: |
+          for attempt in {1..30}; do
+            if php -r 'try { new PDO(getenv("SISP_TEST_SQLSRV_ADMIN_DSN"), getenv("SISP_TEST_SQLSRV_USER"), getenv("SISP_TEST_SQLSRV_PASSWORD")); } catch (Throwable $exception) { fwrite(STDERR, $exception->getMessage()); exit(1); }'; then
+              break
+            fi
+            if [ "$attempt" -eq 30 ]; then
+              exit 1
+            fi
+            sleep 2
+          done
+          php -r '$pdo = new PDO(getenv("SISP_TEST_SQLSRV_ADMIN_DSN"), getenv("SISP_TEST_SQLSRV_USER"), getenv("SISP_TEST_SQLSRV_PASSWORD")); if ((int) $pdo->query("SELECT DB_ID(NCHAR(115) + NCHAR(105) + NCHAR(115) + NCHAR(112))")->fetchColumn() === 0) { $pdo->exec("CREATE DATABASE [sisp]"); }'
       - run: php vendor/bin/phpunit tests/PdoStorageTest.php tests/PdoDriverIntegrationTest.php

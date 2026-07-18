@@ -7,6 +7,8 @@
   `SISP_CALLBACK_URL` no ambiente seguro;
 - defina `SISP_AUTO_MIGRATE=false`, instale o driver PDO correcto e execute as
   migrações no motor de produção antes de expor o checkout;
+- para SQL Server, instale `pdo_sqlsrv` e o Microsoft ODBC Driver, use um
+  certificado TLS confiado e mantenha `TrustServerCertificate=no`;
 - use HTTPS público no callback e teste DNS, firewall, TLS e redireccionamentos;
 - valide criação, redireccionamento, callback válido, callback repetido, falha
   de pagamento e transação pendente no ambiente de testes do fornecedor;

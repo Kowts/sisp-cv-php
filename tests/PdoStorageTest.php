@@ -7,6 +7,7 @@ namespace Kowts\Sisp\Tests;
 use Kowts\Sisp\Config\SispConfig;
 use Kowts\Sisp\Domain\TransactionStatus;
 use Kowts\Sisp\Domain\ValueObject\CallbackPayload;
+use Kowts\Sisp\Infrastructure\Persistence\SispSchema;
 use Kowts\Sisp\Infrastructure\Persistence\PdoTransactionStore;
 use Kowts\Sisp\SispFactory;
 use PDO;
@@ -14,6 +15,16 @@ use PHPUnit\Framework\TestCase;
 
 final class PdoStorageTest extends TestCase
 {
+    public function testSqlServerSchemaUsesCompatibleStatements(): void
+    {
+        $statements = implode("\n", SispSchema::statements('sqlsrv'));
+
+        self::assertStringContainsString('BIGINT IDENTITY(1,1) PRIMARY KEY', $statements);
+        self::assertStringContainsString('VARCHAR(MAX)', $statements);
+        self::assertStringContainsString("OBJECT_ID(N'dbo.sisp_transactions', N'U')", $statements);
+        self::assertStringNotContainsString('CREATE TABLE IF NOT EXISTS', $statements);
+    }
+
     public function testCreatePaymentPersistsTransactionAndAttempt(): void
     {
         $pdo = new PDO('sqlite::memory:');
