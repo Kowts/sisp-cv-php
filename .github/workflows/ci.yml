@@ -179,8 +179,16 @@ jobs:
             fi
             sleep 2
           done
-          php -r 'try { new PDO(getenv("SISP_TEST_SQLSRV_ADMIN_DSN"), getenv("SISP_TEST_SQLSRV_USER"), getenv("SISP_TEST_SQLSRV_PASSWORD")); } catch (Throwable $exception) { fwrite(STDERR, $exception->getMessage() . PHP_EOL); exit(1); }'
-          php -r '$pdo = new PDO(getenv("SISP_TEST_SQLSRV_ADMIN_DSN"), getenv("SISP_TEST_SQLSRV_USER"), getenv("SISP_TEST_SQLSRV_PASSWORD")); if ((int) $pdo->query("SELECT DB_ID(NCHAR(115) + NCHAR(105) + NCHAR(115) + NCHAR(112))")->fetchColumn() === 0) { $pdo->exec("CREATE DATABASE [sisp]"); }'
+          for attempt in {1..30}; do
+            if php -r '$pdo = new PDO(getenv("SISP_TEST_SQLSRV_ADMIN_DSN"), getenv("SISP_TEST_SQLSRV_USER"), getenv("SISP_TEST_SQLSRV_PASSWORD")); if ((int) $pdo->query("SELECT DB_ID(NCHAR(115) + NCHAR(105) + NCHAR(115) + NCHAR(112))")->fetchColumn() === 0) { $pdo->exec("CREATE DATABASE [sisp]"); }'; then
+              break
+            fi
+            if [ "$attempt" -eq 30 ]; then
+              echo 'SQL Server abriu a porta 1433, mas não aceitou conexões PDO a tempo.' >&2
+              exit 1
+            fi
+            sleep 2
+          done
       - name: Diagnosticar contentor SQL Server
         if: failure()
         run: |
