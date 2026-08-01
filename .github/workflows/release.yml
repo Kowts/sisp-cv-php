@@ -50,7 +50,7 @@ jobs:
           cd dist
           sha256sum *.zip *.json > SHA256SUMS
       - name: Atestar proveniência do pacote
-        uses: actions/attest-build-provenance@78e6cbd37d0ac1a40113c04f2037dacf1ea3f12e # v4
+        uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v4
         with:
           subject-path: dist/*.zip
       - name: Atestar SBOM
